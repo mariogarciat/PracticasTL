@@ -5,6 +5,14 @@
  */
 package View;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import practica1compiladores.Reader;
+
 /**
  *
  * @author mario.garciat
@@ -103,8 +111,23 @@ public class main extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        
-        
+        String ruta = null;
+        Reader reader;
+        JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("*.TXT", "txt");
+        fc.setFileFilter(filtro);
+//        int seleccion = fc.showOpenDialog(jPanel1);
+//        if (seleccion == JFileChooser.APPROVE_OPTION) {
+//            File fichero = fc.getSelectedFile();
+//            ruta = fichero.getAbsolutePath();
+//        }
+        reader = new Reader(ruta);
+        try {
+            reader.readData();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
