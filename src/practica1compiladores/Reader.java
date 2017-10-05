@@ -80,6 +80,36 @@ public class Reader {
                 concat = concat + "\n" + linea;
             }
             System.out.println(concat);
+            System.out.println(view.getjButton1().getText());
+            textArea.setText(concat);
+        } else {
+            JOptionPane.showMessageDialog(panel, "El archivo está vacío.");
+        }
+        return concat;
+    }
+    
+    public String setGramatica(String path) throws FileNotFoundException{
+        
+        Scanner archivo;
+        view = new main();
+        JTextArea textArea = view.getjTextArea1();
+        JPanel panel = view.getjPanel1();
+        
+        try {
+            archivo = new Scanner(new File(ruta));
+        } catch (FileNotFoundException ex) {
+            System.out.println("El archivo no existe en la misma carpeta del ejecutable.");
+            throw ex;
+        }
+        
+        String linea = "";
+        String concat = "";
+        if (archivo.hasNextLine()) {
+            while (archivo.hasNextLine()) {
+                linea = archivo.nextLine();
+                concat = concat + "\n" + linea;
+            }
+            System.out.println(concat);
             textArea.setText(concat);
         } else {
             JOptionPane.showMessageDialog(panel, "El archivo está vacío.");

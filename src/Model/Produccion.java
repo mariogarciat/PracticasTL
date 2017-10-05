@@ -10,6 +10,7 @@ package Model;
  * @author mario.garciat
  */
 public class Produccion {
+    
     private Object ladoizq;
     private Object ladoder;
     private String terminal;
