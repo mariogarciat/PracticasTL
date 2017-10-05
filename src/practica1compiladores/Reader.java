@@ -5,6 +5,7 @@
  */
 package practica1compiladores;
 
+import View.main;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,6 +21,9 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -28,10 +32,16 @@ import javax.swing.JOptionPane;
 public class Reader {
     
     private String ruta;
+    private View.main view;
 
-    public Reader(String ruta) {
-        this.ruta = ruta;
+    public Reader(main view) {
+        this.view = view;
     }
+
+    public Reader() {
+    }
+    
+    
 
     public String getRuta() {
         return ruta;
@@ -41,74 +51,40 @@ public class Reader {
         this.ruta = ruta;
     }
 
-    public void readData() throws FileNotFoundException {
+    public String readFile() throws FileNotFoundException {
+        
         Scanner archivo;
+        view = new main();
+        String ruta = "";
+        JPanel panel = view.getjPanel1();
+        JTextArea textArea = view.getjTextArea1();
+        JFileChooser fc = new JFileChooser();
+        int returnVal = fc.showOpenDialog(panel);
+        fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("*.TXT", "txt");
+        fc.setFileFilter(filtro);
+        File fichero = fc.getSelectedFile();
+        ruta = fichero.getAbsolutePath();
+        
         try {
             archivo = new Scanner(new File(ruta));
         } catch (FileNotFoundException ex) {
             System.out.println("El archivo no existe en la misma carpeta del ejecutable.");
-            Logger.getLogger(Reader.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
         }
-        String linea;
+        String linea = "";
+        String concat = "";
         if (archivo.hasNextLine()) {
             while (archivo.hasNextLine()) {
                 linea = archivo.nextLine();
+                concat = concat + "\n" + linea;
             }
+            System.out.println(concat);
+            textArea.setText(concat);
         } else {
-            System.out.println("El archivo está vacío.");
+            JOptionPane.showMessageDialog(panel, "El archivo está vacío.");
         }
-
-    }
-    
-    private JFrame mainFrame;
-    private String choosenFileName;
-    
-    public String abrirArchivo(){
-        String fileName = "";
-        JFileChooser  fileDialog = new JFileChooser();
-        int returnVal = fileDialog.showOpenDialog(mainFrame);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            choosenFileName = fileDialog.getSelectedFile().getName();
-            fileName = fileDialog.getSelectedFile().getAbsolutePath();
-               
-        } else { 
-           fileName = "";
-        }
-        return fileName;
-    }
-    
-    public String leerDatos(String delimiter) throws FileNotFoundException, IOException{
-        String filePath = abrirArchivo();
-        InputStream in = null;
-        BufferedInputStream s;
-        BufferedReader myInput;
-        StringTokenizer st;
-        double dato = 0;
-        try{
-            in = new FileInputStream(filePath);
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "No ha abierto ningun archivo");
-            return null;
-        }
-        String thisLine;
-        s = new BufferedInputStream(in);
-        myInput = new BufferedReader(new InputStreamReader(s));
-        while ((thisLine = myInput.readLine()) != null) {
-            st = new StringTokenizer(thisLine, delimiter);
-            while(st.hasMoreElements()){
-                try{
-                    dato = Double.parseDouble((String) st.nextElement());
-                } catch(NumberFormatException e){
-                    JOptionPane.showMessageDialog(null,"Error al cargar los datos.\n Formato erròneo\nPor favor verifique el archivo e intente nuevamente :)");
-                    ListaLigada leerDatos = leerDatos(delimiter);
-                    return leerDatos;
-                }                
-                value = new Nodo(dato);
-                values.addNodo(value);
-            }
-        }
-        return(values);
+        return concat;
     }
     
 }
