@@ -5,19 +5,24 @@
  */
 package Model;
 
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  *
  * @author mario.garciat
  */
 public class Produccion {
     
-    private Object ladoizq;
-    private Object ladoder;
-    private String terminal;
-    private String noTerminal;
-    
-    
-    
-    
-    
+    private String produccion;
+    private Expresion ladoIzq;
+    private Expresion ladoDer;
+
+    public Produccion(String produccion, Expresion ladoIzq, Expresion ladoDer) {
+        this.produccion = produccion;
+        this.ladoIzq = ladoIzq;
+        this.ladoDer = ladoDer;
+        
+    }
 }
