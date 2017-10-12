@@ -5,16 +5,12 @@
  */
 package Model;
 
-import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  *
  * @author mario.garciat
  */
 public class Produccion {
-    
+
     private String produccion;
     private Expresion ladoIzq;
     private Expresion ladoDer;
@@ -23,6 +19,17 @@ public class Produccion {
         this.produccion = produccion;
         this.ladoIzq = ladoIzq;
         this.ladoDer = ladoDer;
-        
+    }
+
+    public String getProduccion() {
+        return produccion;
+    }
+
+    public Expresion getLadoIzq() {
+        return ladoIzq;
+    }
+
+    public Expresion getLadoDer() {
+        return ladoDer;
     }
 }

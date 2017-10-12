@@ -13,6 +13,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,16 +25,28 @@ import java.util.regex.Pattern;
 public class Txt_gramatica_parser {
 
     /* --------------------- CAPTURA DE ARCHIVOS (FILES)  --------------------- */
-    public static ArrayList getProductionArrayList(File file) throws FileNotFoundException, IOException {
+    public static ArrayList getProductionArrayList(File file) throws FileNotFoundException {
 
         FileReader f = new FileReader(file);
-        return getProductionArrayList(f);
+        try {
+            return getProductionArrayList(f);
+        } catch (IOException ex) {
+            System.out.println("Error en la lectura del archivo");
+            Logger.getLogger(Txt_gramatica_parser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
-    public static ArrayList getProductionArrayList(String path) throws FileNotFoundException, IOException {
+    public static ArrayList getProductionArrayList(String path) throws FileNotFoundException {
 
         FileReader f = new FileReader(path);
-        return getProductionArrayList(f);
+        try {
+            return getProductionArrayList(f);
+        } catch (IOException ex) {
+            System.out.println("Error en la lectura del archivo");
+            Logger.getLogger(Txt_gramatica_parser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     // Fase 1: tomar los renglones del archivo .txt y almacenar cada uno de ellos en un ArrayList<String>
@@ -50,7 +64,8 @@ public class Txt_gramatica_parser {
     }
 
     //Fase 2: tomar el ArrayList<String> creado en la fase 1 y depurar cada elemento de este ArrayList;
-    // la depuración consiste simplemente en eliminar el indicativo de ordinalidad de cada producción.
+    // la depuración consiste simplemente en eliminar el indicativo de ordinalidad de cada producción
+    // y obtener de cada producción. la expresión del lado derecho y a del lado izquierdo.
     private static ArrayList<Produccion> getProductionArrayList(FileReader file) throws IOException {
         ArrayList<String> ap = getProductionArrayList_(file);
         ArrayList<Produccion> arrayProducciones = new ArrayList<>();
