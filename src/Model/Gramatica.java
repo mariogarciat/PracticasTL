@@ -9,7 +9,7 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Gramatica implements Cloneable {
+public class Gramatica{
 
     private final ArrayList<Produccion> producciones;
     private final TreeSet<String> terminales;
@@ -17,104 +17,16 @@ public class Gramatica implements Cloneable {
     private final TreeSet<String> noTerminalesInalcanzables;
     private final TreeSet<String> noTerminalesMuertos;
     private final TreeSet<String> noTerminalesVivos;
-
-    public static void main(String[] args) {
-        Gramatica gramatica;
-        try {
-            gramatica = new Gramatica("gramatica_prueba.txt");
-            //gramatica.mostrarGramatica();
-            ArrayList<Produccion> array = gramatica.getProducciones();
-            Expresion exp = array.get(0).getLadoDer();
-            TreeSet<String> terminales = exp.getTerminales();
-            System.out.println("Expresión: " + exp.getExpresion());
-            for (String str : terminales) {
-                System.out.println(str);
-            }
-
-            System.out.println("No terminal inicial: " + gramatica.getNoTerminalInicial());
-
-            System.out.println("Producciones iniciales:");
-            for (Produccion p : gramatica.getProduccionesIniciales()) {
-                System.out.println(p.getProduccion());
-            }
-
-            System.out.println("");
-            System.out.println("No termiales INALCANZABLES:");
-            TreeSet noTerminalesIn = gramatica.getNoTerminalesInalcanzables();
-            for (Object str : noTerminalesIn) {
-                String s = (String) str;
-                System.out.println(s);
-            }
-
-            System.out.println("");
-            System.out.println("No termiales VIVOS:");
-            TreeSet noTerminalesVivos = gramatica.getNoTerminalesVivos();
-            for (Object str : noTerminalesVivos) {
-                String s = (String) str;
-                System.out.println(s);
-            }
-
-            System.out.println("");
-            System.out.println("No termiales MUERTOS:");
-            TreeSet noTerminalesMuertos = gramatica.getNoTerminalesMuertos();
-            for (Object str : noTerminalesMuertos) {
-                String s = (String) str;
-                System.out.println(s);
-            }
-
-            Gramatica gramaticaSimplificada = gramatica.simplificar();
-            System.out.println("");
-            System.out.println("");
-            System.out.println("");
-            System.out.println("");
-
-            gramaticaSimplificada.mostrarGramatica();
-
-            System.out.println("No terminal inicial: " + gramaticaSimplificada.getNoTerminalInicial());
-
-            System.out.println("Producciones iniciales:");
-            for (Produccion p : gramaticaSimplificada.getProduccionesIniciales()) {
-                System.out.println(p.getProduccion());
-            }
-
-            System.out.println("");
-            System.out.println("No termiales INALCANZABLES:");
-            noTerminalesIn = gramaticaSimplificada.getNoTerminalesInalcanzables();
-            for (Object str : noTerminalesIn) {
-                String s = (String) str;
-                System.out.println(s);
-            }
-
-            System.out.println("");
-            System.out.println("No termiales VIVOS:");
-            noTerminalesVivos = gramaticaSimplificada.getNoTerminalesVivos();
-            for (Object str : noTerminalesVivos) {
-                String s = (String) str;
-                System.out.println(s);
-            }
-
-            System.out.println("");
-            System.out.println("No termiales MUERTOS:");
-            noTerminalesMuertos = gramaticaSimplificada.getNoTerminalesMuertos();
-            for (Object str : noTerminalesMuertos) {
-                String s = (String) str;
-                System.out.println(s);
-            }
-
-        } catch (FileNotFoundException ex) {
-            System.out.println("------------------ Archivo no encontrado ------------------");
-            Logger.getLogger(Gramatica.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
+    
     public Gramatica(File file) throws FileNotFoundException {
         producciones = control.Txt_gramatica_parser.getProductionArrayList(file);
         terminales = new TreeSet<>();
         noTerminales = new TreeSet<>();
         noTerminalesMuertos = new TreeSet<>();
         noTerminalesVivos = new TreeSet<>();
-        noTerminalesInalcanzables = getNoTerminalesInalcanzables();
+        noTerminalesInalcanzables = new TreeSet<>();
         getTerminales_noTerminales_();
+        getNoTerminalesInalcanzables_();
         getNoTerminalesVivos_();
         getNoTerminalesMuertos_();
     }
@@ -238,7 +150,7 @@ public class Gramatica implements Cloneable {
         } while (seAgregoNuevoNoTerminal); //El ciclo termina cuando se dejaron de encontrar terminales vivos, RIP terminales :c
 
     }
-
+    
     private void getNoTerminalesMuertos_() {
         TreeSet<String> noTMuertos = (TreeSet<String>) noTerminales.clone();
         noTMuertos.removeAll(noTerminalesVivos);
