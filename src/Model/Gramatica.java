@@ -6,10 +6,8 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Stack;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-public class Gramatica{
+public class Gramatica {
 
     private final ArrayList<Produccion> producciones;
     private final TreeSet<String> terminales;
@@ -17,7 +15,8 @@ public class Gramatica{
     private final TreeSet<String> noTerminalesInalcanzables;
     private final TreeSet<String> noTerminalesMuertos;
     private final TreeSet<String> noTerminalesVivos;
-    
+    private static String NO_TERMINAL_NULO;
+
     public Gramatica(File file) throws FileNotFoundException {
         producciones = control.Txt_gramatica_parser.getProductionArrayList(file);
         terminales = new TreeSet<>();
@@ -29,6 +28,7 @@ public class Gramatica{
         getNoTerminalesInalcanzables_();
         getNoTerminalesVivos_();
         getNoTerminalesMuertos_();
+        NO_TERMINAL_NULO = "_";
     }
 
     public Gramatica(String path) throws FileNotFoundException {
@@ -43,6 +43,7 @@ public class Gramatica{
         getNoTerminalesInalcanzables_();
         getNoTerminalesVivos_();
         getNoTerminalesMuertos_();
+        NO_TERMINAL_NULO = "_";
     }
 
     private Gramatica(ArrayList<Produccion> producciones) {
@@ -55,7 +56,8 @@ public class Gramatica{
         getTerminales_noTerminales_();
         getNoTerminalesInalcanzables_();
         getNoTerminalesVivos_();
-        getNoTerminalesMuertos_();;
+        getNoTerminalesMuertos_();
+        NO_TERMINAL_NULO = "_";
     }
 
     private void getTerminales_noTerminales_() {
@@ -150,7 +152,7 @@ public class Gramatica{
         } while (seAgregoNuevoNoTerminal); //El ciclo termina cuando se dejaron de encontrar terminales vivos, RIP terminales :c
 
     }
-    
+
     private void getNoTerminalesMuertos_() {
         TreeSet<String> noTMuertos = (TreeSet<String>) noTerminales.clone();
         noTMuertos.removeAll(noTerminalesVivos);
@@ -259,4 +261,70 @@ public class Gramatica{
         }
     }
 
+    public boolean esEspecial() {
+        for (Produccion produccion : producciones) {
+            boolean esEspecial = false;
+            Expresion ExDer = produccion.getLadoDer();
+            if (ExDer.getExpresionOrdenada().size() <= 2) {
+                ArrayList<String> elementos = ExDer.getExpresionOrdenada();
+
+                if (ExDer.getExpresionOrdenada().size() == 2) {
+                    if (noTerminales.contains(elementos.get(1))) {
+                        if (terminales.contains(elementos.get(0))) {
+                            if (elementos.get(0).compareTo(NO_TERMINAL_NULO) != 0) {
+                                esEspecial = true;
+                            }
+                        }
+                    }
+                } else {
+                    if (elementos.get(0).compareTo(NO_TERMINAL_NULO) == 0) {
+                        esEspecial = true;
+                    }
+                }
+            }
+            if (!esEspecial) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean esLinealPorDerecha() {
+        for (Produccion produccion : producciones) {
+            boolean esLinealPorDerecha = false;
+            Expresion ExDer = produccion.getLadoDer();
+            ArrayList<String> elementos = ExDer.getExpresionOrdenada();
+            if (ExDer.getExpresionOrdenada().size() == 1) {
+                if (noTerminales.contains(elementos.get(0))) {
+                    esLinealPorDerecha = true;
+                } else if (elementos.get(0).compareTo(NO_TERMINAL_NULO) == 0) {
+                    esLinealPorDerecha = true;
+                }
+            } else {
+                //obtiene el número de elementos
+                int numElementos = ExDer.getExpresionOrdenada().size();
+                //obtiene el último elemento
+                String lastElemento = ExDer.getExpresionOrdenada().get(numElementos-1);
+                if (noTerminales.contains(lastElemento)) {
+                    esLinealPorDerecha = true;
+                }
+            }
+            if (!esLinealPorDerecha) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public boolean esRegular(){
+        return esLinealPorDerecha();
+    }
+
+    public void setTerminalNulo(String NT_nulo) {
+        NO_TERMINAL_NULO = NT_nulo;
+    }
+
+    public String getTerminalNulo() {
+        return NO_TERMINAL_NULO;
+    }
 }
