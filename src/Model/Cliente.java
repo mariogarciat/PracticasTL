@@ -2,7 +2,6 @@ package Model;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -10,7 +9,8 @@ public class Cliente {
     public static void main(String[] args) {
         Gramatica gramatica;
         try {
-            gramatica = new Gramatica("gramatica_prueba.txt");
+            //gramatica = new Gramatica("gramatica_especial1.txt");
+            gramatica = new Gramatica("gramatica_lineal_derecha.txt");
             ArrayList<Produccion> producciones = gramatica.getProducciones();
             
             for (Produccion produccion : producciones) {
@@ -24,6 +24,9 @@ public class Cliente {
                 System.out.println("");
             }
             
+            System.out.println(gramatica.esEspecial());
+            System.out.println(gramatica.esLinealPorDerecha());
+            System.out.println(gramatica.esRegular());
             
             
         } catch (FileNotFoundException ex) {
