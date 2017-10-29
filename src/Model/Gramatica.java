@@ -291,22 +291,18 @@ public class Gramatica {
 
     public boolean esLinealPorDerecha() {
         for (Produccion produccion : producciones) {
-            boolean esLinealPorDerecha;
             Expresion ExDer = produccion.getLadoDer();
             ArrayList<String> elementos = ExDer.getExpresionOrdenada();
-            if (ExDer.getExpresionOrdenada().size() == 1) {
-                esLinealPorDerecha = true;
-            } else {
+            if (!(ExDer.getExpresionOrdenada().size() == 1)) {
                 //obtiene el número de elementos
                 int numElementos = ExDer.getExpresionOrdenada().size();
                 //obtiene el último elemento
-                for (int i = 0; i < numElementos-1; i++) {
+                for (int i = 0; i < numElementos - 1; i++) {
                     String elemento = elementos.get(i);
                     if (noTerminales.contains(elemento)) {
                         return false;
                     }
                 }
-                esLinealPorDerecha = true;
             }
         }
         return true;
