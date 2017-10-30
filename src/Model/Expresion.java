@@ -1,63 +1,49 @@
 package Model;
 
+import java.util.ArrayList;
 import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Expresion {
 
     private final String expresion;
     private final TreeSet<String> terminales;
     private final TreeSet<String> noTerminales;
+    private final ArrayList<String> expresionOrdenada;
 
     public Expresion(String expresion) {
         this.expresion = expresion;
         // TreeSet es una clase que de la API de Java que implementa la interfaz Set<E>
         terminales = new TreeSet<>(); 
         noTerminales = new TreeSet<>();
-        getTerminales_();
-        getNoTerminales_();
+        expresionOrdenada = new ArrayList<>();
+        getAll_();
     }
+    
+    
 
-    private void getNoTerminales_() {
-        /*
-                USO DE REGEX (\\d\\.)((.*)->(.*))
-                    Este regEx está compuesto por 5 grupos, a saber:
-                        GRUPO 0: está compuesto por todo lo que haga match con el regEx (podría verse como la concatenación de todos los grupos)
-                        GRUPO 1: (\\d+\\.) compuesto por UNA O MÁS cantidad de dígitos que estén seguidos por UN caracter punto
-                        GRUPO 2: ((.*)->(.*)) compuesto por la concatenación del grupo 3, la flecha, y el grupo 4, en ese orden
-                        GRUPO 3: primer (.*) [EXPRESIÓN LADO IZQUIERDO] compuesto por todo lo que esté entre el grupo anterior (grupo 1) y la flecha ( -> )
-                        GRUPO 4: segundo (.*) [EXPRESIÓN LADO DERECHO] compuesto por  lo que esté luego de la flecha
-         */
-        String pattern = "<\\p{Upper}+>"; // los terminales DEBEN SER ESCRITOS EN MAYÚSCULA
-        Pattern p = Pattern.compile(pattern);
-        Matcher m = p.matcher(expresion);
-        while (m.find()) {
-            int primero = m.start();
-            int ultimo = m.end();
-            String noTerminal = expresion.substring(primero, ultimo);
-            noTerminales.add(noTerminal);
-        }
-    }
-
-    private void getTerminales_() {
+    private void getAll_(){
         int charIndex = 0;
         int numCaracteres = expresion.length();
         char charAtIndex;
         while (charIndex < numCaracteres) {
             if (expresion.charAt(charIndex) == '<') {
+                int inicioNoTerminal = charIndex;
+                int finalNoTerminal;
                 charIndex = charIndex + 2; //no pueden haber no terminales vacíos
                 while (expresion.charAt(charIndex) != '>') {                    
                     charIndex++;
                 }
-                charIndex++;
+                finalNoTerminal = ++charIndex;
+                String noTerminal = expresion.substring(inicioNoTerminal, finalNoTerminal);
+                expresionOrdenada.add(noTerminal);
+                noTerminales.add(noTerminal);
             } else {
                 charAtIndex = expresion.charAt(charIndex);
+                expresionOrdenada.add(String.valueOf(charAtIndex));
                 terminales.add(String.valueOf(charAtIndex));
                 charIndex++;
             }
         }
-
     }
 
     public String getExpresion() {
@@ -70,5 +56,14 @@ public class Expresion {
 
     public TreeSet<String> getTerminales() {
         return terminales;
+    }
+    
+    public ArrayList<String> getExpresionOrdenada() {
+        return expresionOrdenada;
+    }
+    
+    public static String getNoterminal(String noTerminal){
+        String nTerminal = noTerminal.substring(1, noTerminal.length()-1);
+        return nTerminal;
     }
 }
