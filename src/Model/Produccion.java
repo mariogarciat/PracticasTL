@@ -12,6 +12,18 @@ public class Produccion {
         this.ladoDer = ladoDer;
     }
 
+    public Produccion(Expresion ladoIzq, Expresion ladoDer) {
+        this.produccion = ladoIzq.toString() + "->" + ladoDer.toString();
+        this.ladoIzq = ladoIzq;
+        this.ladoDer = ladoDer;
+    }
+
+    public Produccion(String ladoIzq, String ladoDer) {
+        this.produccion = ladoIzq + "->" + ladoDer;
+        this.ladoIzq = new Expresion(ladoIzq);
+        this.ladoDer = new Expresion(ladoDer);
+    }
+
     public String getProduccion() {
         return produccion;
     }

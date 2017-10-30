@@ -18,6 +18,8 @@ public class Expresion {
         expresionOrdenada = new ArrayList<>();
         getAll_();
     }
+    
+    
 
     private void getAll_(){
         int charIndex = 0;
@@ -58,5 +60,10 @@ public class Expresion {
     
     public ArrayList<String> getExpresionOrdenada() {
         return expresionOrdenada;
+    }
+    
+    public static String getNoterminal(String noTerminal){
+        String nTerminal = noTerminal.substring(1, noTerminal.length()-1);
+        return nTerminal;
     }
 }

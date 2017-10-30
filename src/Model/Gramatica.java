@@ -15,7 +15,9 @@ public class Gramatica {
     private final TreeSet<String> noTerminalesInalcanzables;
     private final TreeSet<String> noTerminalesMuertos;
     private final TreeSet<String> noTerminalesVivos;
-    private static String NO_TERMINAL_NULO;
+    private final ArrayList<Produccion> produccionesEspeciales;
+    private final ArrayList<Produccion> produccionesLinealesDerecha;
+    private static String NO_TERMINAL_NULO = "_";
 
     public Gramatica(File file) throws FileNotFoundException {
         producciones = control.Txt_gramatica_parser.getProductionArrayList(file);
@@ -24,11 +26,14 @@ public class Gramatica {
         noTerminalesMuertos = new TreeSet<>();
         noTerminalesVivos = new TreeSet<>();
         noTerminalesInalcanzables = new TreeSet<>();
+        produccionesEspeciales = new ArrayList<>();
+        produccionesLinealesDerecha = new ArrayList<>();
         getTerminales_noTerminales_();
         getNoTerminalesInalcanzables_();
         getNoTerminalesVivos_();
         getNoTerminalesMuertos_();
-        NO_TERMINAL_NULO = "_";
+        getEspeciales_();
+        getLinealesPorDerecha_();
     }
 
     public Gramatica(String path) throws FileNotFoundException {
@@ -39,25 +44,31 @@ public class Gramatica {
         noTerminalesMuertos = new TreeSet<>();
         noTerminalesVivos = new TreeSet<>();
         noTerminalesInalcanzables = new TreeSet<>();
+        produccionesEspeciales = new ArrayList<>();
+        produccionesLinealesDerecha = new ArrayList<>();
         getTerminales_noTerminales_();
         getNoTerminalesInalcanzables_();
         getNoTerminalesVivos_();
         getNoTerminalesMuertos_();
-        NO_TERMINAL_NULO = "_";
+        getEspeciales_();
+        getLinealesPorDerecha_();
     }
 
-    private Gramatica(ArrayList<Produccion> producciones) {
+    public Gramatica(ArrayList<Produccion> producciones) {
         this.producciones = producciones;
         terminales = new TreeSet<>();
         noTerminales = new TreeSet<>();
         noTerminalesMuertos = new TreeSet<>();
         noTerminalesVivos = new TreeSet<>();
         noTerminalesInalcanzables = new TreeSet<>();
+        produccionesEspeciales = new ArrayList<>();
+        produccionesLinealesDerecha = new ArrayList<>();
         getTerminales_noTerminales_();
         getNoTerminalesInalcanzables_();
         getNoTerminalesVivos_();
         getNoTerminalesMuertos_();
-        NO_TERMINAL_NULO = "_";
+        getEspeciales_();
+        getLinealesPorDerecha_();
     }
 
     private void getTerminales_noTerminales_() {
@@ -191,6 +202,14 @@ public class Gramatica {
         return null;
     }
 
+    public ArrayList<Produccion> getProduccionesEspeciales() {
+        return produccionesEspeciales;
+    }
+
+    public ArrayList<Produccion> getProduccionesLinealesDerecha() {
+        return produccionesLinealesDerecha;
+    }
+
     public Produccion getProduccion(int i) {
         return producciones.get(i);
     }
@@ -261,9 +280,8 @@ public class Gramatica {
         }
     }
 
-    public boolean esEspecial() {
+    private void getEspeciales_() {
         for (Produccion produccion : producciones) {
-            boolean esEspecial = false;
             Expresion ExDer = produccion.getLadoDer();
             if (ExDer.getExpresionOrdenada().size() <= 2) {
                 ArrayList<String> elementos = ExDer.getExpresionOrdenada();
@@ -272,25 +290,22 @@ public class Gramatica {
                     if (noTerminales.contains(elementos.get(1))) {
                         if (terminales.contains(elementos.get(0))) {
                             if (elementos.get(0).compareTo(NO_TERMINAL_NULO) != 0) {
-                                esEspecial = true;
+                                produccionesEspeciales.add(produccion);
                             }
                         }
                     }
                 } else {
                     if (elementos.get(0).compareTo(NO_TERMINAL_NULO) == 0) {
-                        esEspecial = true;
+                        produccionesEspeciales.add(produccion);
                     }
                 }
             }
-            if (!esEspecial) {
-                return false;
-            }
         }
-        return true;
     }
 
-    public boolean esLinealPorDerecha() {
+    private void getLinealesPorDerecha_() {
         for (Produccion produccion : producciones) {
+            boolean esLinealPorDerecha = true;
             Expresion ExDer = produccion.getLadoDer();
             ArrayList<String> elementos = ExDer.getExpresionOrdenada();
             if (!(ExDer.getExpresionOrdenada().size() == 1)) {
@@ -300,23 +315,33 @@ public class Gramatica {
                 for (int i = 0; i < numElementos - 1; i++) {
                     String elemento = elementos.get(i);
                     if (noTerminales.contains(elemento)) {
-                        return false;
+                        esLinealPorDerecha = false;
                     }
                 }
             }
+            if (esLinealPorDerecha) {
+                produccionesLinealesDerecha.add(produccion);
+            }
         }
-        return true;
     }
 
     public boolean esRegular() {
         return esLinealPorDerecha();
     }
 
-    public void setTerminalNulo(String NT_nulo) {
+    public static void setTerminalNulo(String NT_nulo) {
         NO_TERMINAL_NULO = NT_nulo;
     }
 
-    public String getTerminalNulo() {
+    public static String getTerminalNulo() {
         return NO_TERMINAL_NULO;
+    }
+
+    public boolean esEspecial() {
+        return produccionesEspeciales.size() == producciones.size();
+    }
+
+    public boolean esLinealPorDerecha() {
+        return produccionesLinealesDerecha.size() == producciones.size();
     }
 }
