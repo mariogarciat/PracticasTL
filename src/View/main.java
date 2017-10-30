@@ -47,29 +47,34 @@ public class main extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnCargar = new javax.swing.JButton();
+        btnSimpGra = new javax.swing.JButton();
+        btnAutomata = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        btnBorrar = new javax.swing.JButton();
+        btnGuardar = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("Cargar ");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnCargar.setText("Cargar ");
+        btnCargar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnCargarActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Simplificar");
+        btnSimpGra.setText("Simplificar");
 
-        jButton3.setText("Autómata");
+        btnAutomata.setText("Autómata");
+        btnAutomata.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAutomataActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Gramática");
 
@@ -77,17 +82,17 @@ public class main extends javax.swing.JFrame {
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
 
-        jButton4.setText("Borrar");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        btnBorrar.setText("Borrar");
+        btnBorrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                btnBorrarActionPerformed(evt);
             }
         });
 
-        jButton5.setText("Guardar");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                btnGuardarActionPerformed(evt);
             }
         });
 
@@ -107,9 +112,9 @@ public class main extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(51, 51, 51)
-                        .addComponent(jButton2)
+                        .addComponent(btnSimpGra)
                         .addGap(82, 82, 82)
-                        .addComponent(jButton3))
+                        .addComponent(btnAutomata))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -123,15 +128,15 @@ public class main extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(57, 57, 57)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel2)
-                                    .addComponent(jButton1)))
+                                    .addComponent(btnCargar)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(48, 48, 48)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addGap(12, 12, 12)
-                                        .addComponent(jButton5))
+                                        .addComponent(btnGuardar))
                                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addContainerGap(71, Short.MAX_VALUE))
         );
@@ -144,21 +149,21 @@ public class main extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(26, 26, 26)
-                        .addComponent(jButton1)
+                        .addComponent(btnCargar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton4)
+                        .addComponent(btnBorrar)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton5)
+                        .addComponent(btnGuardar)
                         .addGap(0, 37, Short.MAX_VALUE))
                     .addComponent(jScrollPane1))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3)
-                    .addComponent(jButton2))
+                    .addComponent(btnAutomata)
+                    .addComponent(btnSimpGra))
                 .addContainerGap())
         );
 
@@ -178,16 +183,31 @@ public class main extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarActionPerformed
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+        String gram = "";
+        control.Reader reader;
+        reader = new control.Reader();
+         
+        if(jTextArea1.getText().isEmpty()){
+            try {
+            gram = reader.readFile();
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            jTextArea1.setText(gram);
+        }else{
+            JOptionPane.showMessageDialog(rootPane, jTextArea1.getText());
+         }
+        
+    }//GEN-LAST:event_btnCargarActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
         // TODO add your handling code here:
         jTextArea1.setText("");
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_btnBorrarActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(
               new FileOutputStream(jTextField1.getText()), "utf-8"))) {
@@ -196,11 +216,16 @@ public class main extends javax.swing.JFrame {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
         }
         JOptionPane.showMessageDialog(rootPane, "Gramática guardada");
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void btnAutomataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAutomataActionPerformed
+        // TODO add your handling code here:
+        new AutomataView().setVisible(true);
+    }//GEN-LAST:event_btnAutomataActionPerformed
 
     /**
      * @param args the command line arguments
@@ -238,11 +263,11 @@ public class main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JButton btnAutomata;
+    private javax.swing.JButton btnBorrar;
+    private javax.swing.JButton btnCargar;
+    private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnSimpGra;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
@@ -252,27 +277,27 @@ public class main extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     public JButton getjButton1() {
-        return jButton1;
+        return btnCargar;
     }
 
     public void setjButton1(JButton jButton1) {
-        this.jButton1 = jButton1;
+        this.btnCargar = jButton1;
     }
 
     public JButton getjButton2() {
-        return jButton2;
+        return btnSimpGra;
     }
 
     public void setjButton2(JButton jButton2) {
-        this.jButton2 = jButton2;
+        this.btnSimpGra = jButton2;
     }
 
     public JButton getjButton3() {
-        return jButton3;
+        return btnAutomata;
     }
 
     public void setjButton3(JButton jButton3) {
-        this.jButton3 = jButton3;
+        this.btnAutomata = jButton3;
     }
 
     public JLabel getjLabel1() {
