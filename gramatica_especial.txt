@@ -1,0 +1,11 @@
+<S> -> a<A>
+<S> -> b<nulo>
+<nulo> -> _
+<S> -> a<bbS>
+<S> -> c<A>
+<S> -> _
+<A> -> a<bbs>
+<bbS> -> b<bs>
+<bS> -> b<S>
+<A> -> c<A>
+<A> -> _

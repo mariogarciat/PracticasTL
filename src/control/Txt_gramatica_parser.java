@@ -53,7 +53,7 @@ public class Txt_gramatica_parser {
         System.out.println("Carga FASE 1 de producciones a ArrayList desde .txt completa");
         return producciones;
     }
-
+    
     //Fase 2: tomar el ArrayList<String> creado en la fase 1 y depurar cada elemento de este ArrayList;
     // la depuración consiste simplemente en eliminar el indicativo de ordinalidad de cada producción
     // y obtener de cada producción. la expresión del lado derecho y a del lado izquierdo.
@@ -66,22 +66,21 @@ public class Txt_gramatica_parser {
             prod = prod.replaceAll(" ", "");
             
             /*
-                USO DE REGEX (\\d\\.)((.*)->(.*))
+                USO DE REGEX ((.*)->(.*))
                     Este regEx está compuesto por 5 grupos, a saber:
                         GRUPO 0: está compuesto por todo lo que haga match con el regEx (podría verse como la concatenación de todos los grupos)
-                        GRUPO 1: (\\d+\\.) compuesto por UNA O MÁS cantidad de dígitos que estén seguidos por UN caracter punto
-                        GRUPO 2: ((.*)->(.*)) compuesto por la concatenación del grupo 3, la flecha, y el grupo 4, en ese orden
-                        GRUPO 3: primer (.*) [EXPRESIÓN LADO IZQUIERDO] compuesto por todo lo que esté entre el grupo anterior (grupo 1) y la flecha ( -> )
-                        GRUPO 4: segundo (.*) [EXPRESIÓN LADO DERECHO] compuesto por  lo que esté luego de la flecha
+                        GRUPO 1: ((.*)->(.*)) compuesto por la concatenación del grupo 3, la flecha, y el grupo 4, en ese orden
+                        GRUPO 2: primer (.*) [EXPRESIÓN LADO IZQUIERDO] compuesto por todo lo que esté entre el grupo anterior (grupo 1) y la flecha ( -> )
+                        GRUPO 3: segundo (.*) [EXPRESIÓN LADO DERECHO] compuesto por  lo que esté luego de la flecha
              */
-            String pattern = "(\\d+\\.)((.*)->(.*))";
+            String pattern = "((.*)->(.*))";
             Pattern p = Pattern.compile(pattern);
             Matcher m = p.matcher(prod);
             if (m.matches()) {
                 Produccion produccion = new Produccion(
-                        m.group(2),
-                        new Expresion(m.group(3)),
-                        new Expresion(m.group(4)));
+                        m.group(1),
+                        new Expresion(m.group(2)),
+                        new Expresion(m.group(3)));
                 arrayProducciones.add(produccion);
             }
         }
