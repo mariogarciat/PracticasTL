@@ -32,7 +32,8 @@ public class AutomataView extends javax.swing.JFrame {
         getContentPane().setBackground(Color.LIGHT_GRAY);
         
         try {
-            gramatica = new Gramatica("gramatica_especial.txt");
+            gramatica = new Gramatica("gramatica_linealderecha.txt");
+            //gramatica = new Gramatica("gramatica_especial.txt");
         } catch (FileNotFoundException ex) {
             Logger.getLogger(AutomataView.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -42,10 +43,10 @@ public class AutomataView extends javax.swing.JFrame {
         String[] nEstados = (String[]) gramatica.getNoTerminales().toArray(new String[gramatica.getNoTerminales().size()]);
         String[] nSimbolos = (String[]) gramatica.getTerminales().toArray(new String[gramatica.getTerminales().size()]);
         
-//        List<String> list =  new ArrayList<String>();
-//        Collections.addAll(list, nSimbolos); 
-//        list.remove("_");
-//        nSimbolos = list.toArray(new String[list.size()]);
+        List<String> list =  new ArrayList<String>();
+        Collections.addAll(list, nSimbolos); 
+        list.remove("_");
+        nSimbolos = list.toArray(new String[list.size()]);
         
         producciones = gramatica.getProducciones();
         
@@ -70,12 +71,16 @@ public class AutomataView extends javax.swing.JFrame {
         }
         int k = 0;
         for (int i = 0; i < nEstados.length; i++) {
-            for (int j = 1; j < nSimbolos.length; j++) {
+            for (int j = 1; j <= nSimbolos.length; j++) {
                 Model.Produccion produccion = producciones.get(k);
                     if(matriz[i][j] == null){
-                        String exp = produccion.getLadoDer().getTerminales().toString();
+                        
+//                        if(matriz[i][j] == produccion.getLadoDer().getNoTerminales().toString()){
+//                            matriz[i][j] = matriz[i][j] + ","
+//                        }
+                        
                         if(produccion.getLadoDer().getTerminales().toString().equals("[_]")){
-                            matriz[i-1][simbolos.length-1] = "1";
+                            matriz[i][simbolos.length-1] = "1";
                             k +=1;
                             j = j-1;
                         }else{
