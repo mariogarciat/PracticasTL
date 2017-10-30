@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -42,10 +43,10 @@ public class main extends javax.swing.JFrame {
         jButtonAutomata = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        jTextAreaGramatica = new javax.swing.JTextArea();
         jButtonBorrar = new javax.swing.JButton();
         jButtonGuardar = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        jTextFileName = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -68,9 +69,9 @@ public class main extends javax.swing.JFrame {
 
         jLabel1.setText("Gramática");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        jTextAreaGramatica.setColumns(20);
+        jTextAreaGramatica.setRows(5);
+        jScrollPane1.setViewportView(jTextAreaGramatica);
 
         jButtonBorrar.setText("Borrar");
         jButtonBorrar.addActionListener(new java.awt.event.ActionListener() {
@@ -86,9 +87,9 @@ public class main extends javax.swing.JFrame {
             }
         });
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        jTextFileName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                jTextFileNameActionPerformed(evt);
             }
         });
 
@@ -100,11 +101,6 @@ public class main extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(81, 81, 81)
-                        .addComponent(jButtonSimplificar)
-                        .addGap(26, 26, 26)
-                        .addComponent(jButtonAutomata))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(96, 96, 96)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -118,13 +114,18 @@ public class main extends javax.swing.JFrame {
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addGap(29, 29, 29)
                                         .addComponent(jLabel2))
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jTextFileName, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(34, 34, 34)
                                 .addComponent(jButtonGuardar))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(174, 174, 174)
-                        .addComponent(jLabel1)))
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(110, 110, 110)
+                        .addComponent(jButtonSimplificar)
+                        .addGap(26, 26, 26)
+                        .addComponent(jButtonAutomata)))
                 .addContainerGap(51, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -141,7 +142,7 @@ public class main extends javax.swing.JFrame {
                         .addGap(35, 35, 35)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTextFileName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonGuardar)
                         .addGap(0, 82, Short.MAX_VALUE))
@@ -170,7 +171,7 @@ public class main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCargarActionPerformed
-        if (jTextArea1.getText().isEmpty()) {
+        if (jTextAreaGramatica.getText().isEmpty()) {
             // crea el JFileChooser
             final JFileChooser fc = new JFileChooser();
 
@@ -197,41 +198,47 @@ public class main extends javax.swing.JFrame {
 
         } else {
             JOptionPane.showMessageDialog(rootPane, "Actualmente hay texto en el área de trabajo.\n\n"
-                    + "Por favor, primero borre el área actual de trabajo y luego intente de nuevo cargar el archivo.");
+                    + "Primero borre el área actual de trabajo y luego intente de nuevo cargar el archivo.");
         }
     }//GEN-LAST:event_jButtonCargarActionPerformed
 
     private void jButtonBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBorrarActionPerformed
-        String gram = "";
-        Reader reader;
-        reader = new Reader();
-
-        if (jTextArea1.getText().isEmpty()) {
-            try {
-                gram = reader.readFile();
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            jTextArea1.setText(gram);
-        } else {
-            JOptionPane.showMessageDialog(rootPane, jTextArea1.getText());
+        if (jTextAreaGramatica.getText().compareTo("") == 0) {
+            return;
         }
+
+        JFrame frame = new JFrame();
+        String[] options = new String[2];
+        options[0] = new String("Sí");
+        options[1] = new String("No");
+        String mensaje = "¿Está seguro que desea borrar\nel espacio de trabajo acutal?";
+        int respuesta = JOptionPane.showOptionDialog(this, mensaje, "", 0, JOptionPane.INFORMATION_MESSAGE, null, options, null);
+        // respuesta = 1 sí elige NO
+        // respuesta = 0 sí elige SÍ
+        if (respuesta == 0) {
+            jTextAreaGramatica.setText(null);
+        }
+
     }//GEN-LAST:event_jButtonBorrarActionPerformed
 
     private void jButtonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGuardarActionPerformed
-        // TODO add your handling code here:
-        try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-                new FileOutputStream(jTextField1.getText()), "utf-8"))) {
-            writer.write(jTextArea1.getText());
-        } catch (IOException ex) {
-            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        if (jTextAreaGramatica.getText().compareTo("") != 0) {
+            if (jTextFileName.getText().compareTo("") != 0) {
+                // método para crear archivo
+                // método para escribir en un archivo de texto
+                JOptionPane.showMessageDialog(this, "Gramática guardada");
+            } else {
+                JOptionPane.showMessageDialog(this, "Asígnele un nombre al archivo");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "El área de trabajo está vacía");
         }
-        JOptionPane.showMessageDialog(rootPane, "Gramática guardada");
+
     }//GEN-LAST:event_jButtonGuardarActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void jTextFileNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFileNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_jTextFileNameActionPerformed
 
     private void jButtonSimplificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSimplificarActionPerformed
 
@@ -282,8 +289,8 @@ public class main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextArea jTextAreaGramatica;
+    private javax.swing.JTextField jTextFileName;
     // End of variables declaration//GEN-END:variables
 
     public JButton getjButton1() {
@@ -335,11 +342,11 @@ public class main extends javax.swing.JFrame {
     }
 
     public JTextArea getjTextArea1() {
-        return jTextArea1;
+        return jTextAreaGramatica;
     }
 
     public void setjTextArea1(JTextArea jTextArea1) {
-        this.jTextArea1 = jTextArea1;
+        this.jTextAreaGramatica = jTextArea1;
     }
 
     private void mostarArchivoCargado(File archivo) throws FileNotFoundException, IOException {
@@ -348,10 +355,10 @@ public class main extends javax.swing.JFrame {
         FileReader f = new FileReader(archivo);
         renglonesTexto = Txt_gramatica_parser.getProductionArrayList_(f);
 
-        jTextArea1.setText(renglonesTexto.get(0));
+        jTextAreaGramatica.setText(renglonesTexto.get(0));
         for (int i = 1; i < renglonesTexto.size(); i++) {
-            String textoActual = jTextArea1.getText();
-            jTextArea1.setText(textoActual + "\n" + renglonesTexto.get(i));
+            String textoActual = jTextAreaGramatica.getText();
+            jTextAreaGramatica.setText(textoActual + "\n" + renglonesTexto.get(i));
         }
     }
 
