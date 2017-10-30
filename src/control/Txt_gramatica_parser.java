@@ -41,7 +41,7 @@ public class Txt_gramatica_parser {
     }
 
     // Fase 1: tomar los renglones del archivo .txt y almacenar cada uno de ellos en un ArrayList<String>
-    private static ArrayList<String> getProductionArrayList_(FileReader file) throws IOException {
+    public static ArrayList<String> getProductionArrayList_(FileReader file) throws IOException {
         ArrayList<String> producciones = new ArrayList<>();
         BufferedReader b = new BufferedReader(file);
 
@@ -49,8 +49,6 @@ public class Txt_gramatica_parser {
         while ((readedString = b.readLine()) != null) { //cuando b.readLine() == null significa que se ha encontrado un salto de linea (retorno de carro —\n—)
             producciones.add(readedString);
         }
-
-        System.out.println("Carga FASE 1 de producciones a ArrayList desde .txt completa");
         return producciones;
     }
     
@@ -84,7 +82,6 @@ public class Txt_gramatica_parser {
                 arrayProducciones.add(produccion);
             }
         }
-        System.out.println("Carga FASE 2 de producciones a ArrayList desde .txt completa");
         return arrayProducciones;
     }
 }

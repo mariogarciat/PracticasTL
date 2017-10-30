@@ -1,12 +1,5 @@
 package control;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
 import View.main;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,10 +10,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-/**
- *
- * @author mario.garciat
- */
 public class Reader {
     
     private String ruta;
