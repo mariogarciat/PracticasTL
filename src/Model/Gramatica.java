@@ -344,12 +344,12 @@ public class Gramatica {
     public boolean esLinealPorDerecha() {
         return produccionesLinealesDerecha.size() == producciones.size();
     }
-    
-    public boolean esSimplificable(){
+
+    public boolean esSimplificable() {
         return (!noTerminalesMuertos.isEmpty() || !noTerminalesInalcanzables.isEmpty());
     }
-    
-    public Gramatica organizarGramatica(){
+
+    public Gramatica organizarGramatica() {
         ArrayList<Produccion> produccionesCopia = (ArrayList<Produccion>) producciones.clone();
         ArrayList<Produccion> produccionesOrdenadas = new ArrayList<>();
         while (!produccionesCopia.isEmpty()) {
@@ -369,5 +369,38 @@ public class Gramatica {
             produccionesCopia.removeAll(produccionesEliminadas);
         }
         return new Gramatica(produccionesOrdenadas);
+    }
+
+    public ArrayList<String> getNoTerminalesOrganizados() {
+
+        TreeSet<String> noTerminalesCopia = (TreeSet<String>) noTerminales.clone();
+        ArrayList<String> noTerminalesOrganizados = new ArrayList<>();
+
+        for (Produccion produccion : producciones) {
+            //-- se analiza la expresión izquierda
+            String expIz = produccion.getLadoIzq().getExpresion();
+            if (noTerminalesCopia.contains(expIz)){
+                noTerminalesOrganizados.add(expIz);
+                noTerminalesCopia.remove(expIz);
+            }
+            
+            /*
+            //-- se analiza la expresión derecha
+            Expresion expDer = produccion.getLadoDer();
+            ArrayList<String> expDerOrdenada = expDer.getExpresionOrdenada();
+            for (String string : expDerOrdenada) {
+                if (noTerminalesCopia.contains(string)) {
+                    noTerminalesOrganizados.add(string);
+                    noTerminalesCopia.remove(string);
+                }
+            }
+            */
+            
+            if (noTerminalesCopia.isEmpty()) {
+                break;
+            }
+        }
+        
+        return noTerminalesOrganizados;
     }
 }
