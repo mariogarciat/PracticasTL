@@ -19,8 +19,8 @@ public class Gramatica {
     private final ArrayList<Produccion> produccionesLinealesDerecha;
     private static String NO_TERMINAL_NULO = "_";
 
-    public Gramatica(File file) throws FileNotFoundException {
-        producciones = control.Txt_gramatica_parser.getProductionArrayList(file);
+    public Gramatica(File file) throws Exception {
+        producciones = control.Txt_gramatica_parser.getProducciones(file);
         terminales = new TreeSet<>();
         noTerminales = new TreeSet<>();
         noTerminalesMuertos = new TreeSet<>();
@@ -36,7 +36,7 @@ public class Gramatica {
         getLinealesPorDerecha_();
     }
 
-    public Gramatica(String path) throws FileNotFoundException {
+    public Gramatica(String path) throws Exception {
         FileReader f = new FileReader(path);
         producciones = control.Txt_gramatica_parser.getProductionArrayList(path);
         terminales = new TreeSet<>();
@@ -272,7 +272,7 @@ public class Gramatica {
         return null;
     }
 
-    void mostrarGramatica() {
+    public void mostrarGramatica() {
         int i = 1;
         for (Produccion produccion : producciones) {
             System.out.println(i + ". " + produccion.getProduccion());
@@ -343,5 +343,9 @@ public class Gramatica {
 
     public boolean esLinealPorDerecha() {
         return produccionesLinealesDerecha.size() == producciones.size();
+    }
+    
+    public boolean esSimplificable(){
+        return (!noTerminalesMuertos.isEmpty() || !noTerminalesInalcanzables.isEmpty());
     }
 }

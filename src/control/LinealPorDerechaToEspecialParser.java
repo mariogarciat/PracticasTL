@@ -18,10 +18,13 @@ public class LinealPorDerechaToEspecialParser {
     public static Gramatica convertir(Gramatica gramatica) {
         ArrayList<Produccion> nuevasProducciones = new ArrayList<>();
         
+        //se dejan sólo las producciones que no son especiales
         ArrayList<Produccion> producciones = gramatica.getProducciones();
         producciones.removeAll(gramatica.getProduccionesEspeciales());
         ArrayList<Produccion> produccionesCaso4 = new ArrayList<>();
         ArrayList<Produccion> agregarProducciones;
+        
+        //se identifica el caso de casa produccion y se procede a transformarlo
         for (Produccion produccion : producciones) {
             ArrayList<String> expresionOrdenada = produccion.getLadoDer().getExpresionOrdenada();
             if (expresionOrdenada.size() == 1) {
@@ -43,11 +46,11 @@ public class LinealPorDerechaToEspecialParser {
                 }
             }
         }
+        nuevasProducciones.addAll(gramatica.getProduccionesEspeciales());
         for (Produccion produccion : produccionesCaso4) {
-            agregarProducciones = caso4(produccion, producciones);
+            agregarProducciones = caso4(produccion, nuevasProducciones);
             nuevasProducciones.addAll(agregarProducciones);
         }
-        nuevasProducciones.addAll(gramatica.getProduccionesEspeciales());
         return new Gramatica(nuevasProducciones);
     }
 
