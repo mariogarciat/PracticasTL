@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package View;
+import Model.Automata;
 import Model.Gramatica;
 import java.awt.Color;
 import java.io.FileNotFoundException;
@@ -32,9 +33,10 @@ public class AutomataView extends javax.swing.JFrame {
         getContentPane().setBackground(Color.LIGHT_GRAY);
         
         try {
-            gramatica = new Gramatica("gramatica_linealderecha.txt");
+            //gramatica = new Gramatica("gramatica_lineal_derecha.txt");
             //gramatica = new Gramatica("gramatica_especial.txt");
-        } catch (FileNotFoundException ex) {
+            gramatica = new Gramatica("gram.txt");
+        } catch (Exception ex) {
             Logger.getLogger(AutomataView.class.getName()).log(Level.SEVERE, null, ex);
         }
         
@@ -70,31 +72,108 @@ public class AutomataView extends javax.swing.JFrame {
             
         }
         int k = 0;
-        for (int i = 0; i < nEstados.length; i++) {
-            for (int j = 1; j <= nSimbolos.length; j++) {
+        int z = 0;
+        int w = 1;
+        vect = new String[nSimbolos.length];
+        while (z < nEstados.length){
+            
+            while (w <= nSimbolos.length){
                 Model.Produccion produccion = producciones.get(k);
-                    if(matriz[i][j] == null){
-                        
-//                        if(matriz[i][j] == produccion.getLadoDer().getNoTerminales().toString()){
-//                            matriz[i][j] = matriz[i][j] + ","
-//                        }
-                        
-                        if(produccion.getLadoDer().getTerminales().toString().equals("[_]")){
-                            matriz[i][simbolos.length-1] = "1";
-                            k +=1;
-                            j = j-1;
-                        }else{
-                            matriz[i][j] = produccion.getLadoDer().getNoTerminales().toString();
-                            matriz[i][simbolos.length-1] = "0";
-                            k +=1;
-                        }
-                        
+                if (produccion.getLadoIzq().getNoTerminales().toString().equals(nEstados[z])){
+                    z = z + 1;
+                    w = 1;
+                    vect = new String[nSimbolos.length];
+                }
+                if(buscar(produccion.getLadoDer().getTerminales().toString(), vect) == false ){
+                    vect[w-1] = produccion.getLadoDer().getTerminales().toString();
+                    //i = i + 1;
+                    if(produccion.getLadoDer().getTerminales().toString().equals("[_]")){                                
+                        matriz[z][simbolos.length-1] = "1";
+                        k +=1;
+                        w = w-1;
                     }else{
-                        break;
+                        matriz[z][w] = produccion.getLadoDer().getNoTerminales().toString();
+                        matriz[z][simbolos.length-1] = "0";
+                        k +=1;
                     }
+                }else{
+                    int nz = buscarEnMatriz(matriz, produccion.getLadoIzq().getNoTerminales().toString());
+                    int nw = buscarEnVector(produccion.getLadoDer().getTerminales().first(), simbolos);
+                    matriz[nz][nw] = matriz[nz][nw] + "," + produccion.getLadoDer().getNoTerminales().toString();
+                    k = k + 1;
+                }
+                w = w+1;
+                if(w > nSimbolos.length){w = w-1;}
             }
+            
+            
+//            for (int j = 1; j <= nSimbolos.length; j++) {
+//                Model.Produccion produccion = producciones.get(k);
+//                if (produccion.getLadoIzq().getNoTerminales().toString().equals(nEstados[z])){
+//                    z = z + 1;
+//                    vect = new String[nSimbolos.length];
+//                }
+//                //if(matriz[z][j] == null){
+//                        
+//                    if(buscar(produccion.getLadoDer().getTerminales().toString(), vect) == false ){
+//                        vect[j-1] = produccion.getLadoDer().getTerminales().toString();
+//                        //i = i + 1;
+//                        if(produccion.getLadoDer().getTerminales().toString().equals("[_]")){                                
+//                            matriz[z][simbolos.length-1] = "1";
+//                            k +=1;
+//                            j = j-1;
+//                        }else{
+//                            matriz[z][j] = produccion.getLadoDer().getNoTerminales().toString();
+//                            matriz[z][simbolos.length-1] = "0";
+//                            k +=1;
+//                        }
+//                    }else{
+//                        int nz = buscarEnMatriz(matriz, produccion.getLadoIzq().getNoTerminales().toString());
+//                        int nj = buscarEnVector(produccion.getLadoDer().getTerminales().first(), simbolos);
+//                        matriz[nz][nj] = matriz[nz][nj] + "," + produccion.getLadoDer().getNoTerminales().toString();
+//                        k = k + 1;
+//                    }
+                        
+//                        
+                //}
+//            }
         }
-         
+//        for (int i = 0; i < nEstados.length; i++) {
+//            vect = new String[nSimbolos.length];
+//            for (int j = 1; j <= nSimbolos.length; j++) {
+//                Model.Produccion produccion = producciones.get(k);
+//                //vect[i] = produccion.getLadoIzq().getNoTerminales().toString();
+//                //vect[j-1] = produccion.getLadoIzq().getTerminales().toString();
+//                if (produccion.getLadoIzq().getNoTerminales().toString().equals(nEstados[i])){
+//                    i = i + 1;
+//                }
+//                    if(matriz[i][j] == null){
+//                        
+//                        if(buscar(produccion.getLadoDer().getTerminales().toString(), vect) == false ){
+//                            vect[j-1] = produccion.getLadoDer().getTerminales().toString();
+//                            //i = i + 1;
+//                            if(produccion.getLadoDer().getTerminales().toString().equals("[_]")){                                
+//                                matriz[i][simbolos.length-1] = "1";
+//                                k +=1;
+//                                j = j-1;
+//                            }else{
+//                                matriz[i][j] = produccion.getLadoDer().getNoTerminales().toString();
+//                                matriz[i][simbolos.length-1] = "0";
+//                                k +=1;
+//                            }
+//                        }else{
+//                            int ni = buscarEnMatriz(matriz, produccion.getLadoIzq().getNoTerminales().toString());
+//                            int nj = buscarEnVector(produccion.getLadoDer().getTerminales().toString(), nSimbolos);
+//                            matriz[ni][nj] = matriz[ni][nj] + "," + produccion.getLadoDer().getNoTerminales().toString();
+//                            k = k + 1;
+//                        }
+//                        
+////                        
+//                    }
+//            }
+//        }
+//        matriz = new String[4][4]; 
+//        String[] sim = {"estado", "cero", "uno", "validacion"}; 
         //String matriz[][] = {{"sa", "fdsfa", "dfae"}, {"sa", "fdsfa", "dfae"}, {"sa", "fdsfa", "dfae"}};
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
                 matriz,
@@ -126,19 +205,31 @@ public class AutomataView extends javax.swing.JFrame {
     Model.Automata automata1;
 
     //Método que guarda el contenido de la tabla en una matriz de nFilas x 4 colúmnas    
-    public void guardarEnMatriz() {
+    public String[][] guardarEnMatriz() {
         int i = 0;
         int j = 0;
-        for (i = 0; i < jTable1.getRowCount(); i++) {
-            for (j = 0; j < jTable1.getColumnCount(); j++) {
-                matriz[i][j] = (String) jTable1.getValueAt(i, j);
+        int nRow = jTable1.getRowCount();
+        int nCol = jTable1.getColumnCount();
+        String[][] matriz = new String[nRow][nCol];
+        for (i = 0; i < nRow; i++) {
+            for (j = 0; j < nCol; j++) {
+                if(jTable1.getValueAt(i, j) != null){
+                    //matriz[i][j] = (String) jTable1.getValueAt(i, j);
+                    matriz[i][j] = (String)jTable1.getValueAt(nRow, nCol);
+                    
+                }else{
+                    matriz[i][j] = "";
+                    
+                }
+                System.out.println(matriz[i][j]);
             }
         }
+        return matriz;
     }
     
     //Método para realizar modificaciónes en la jTable, las modificaciones
     //dependerán del contenido de la matriz
-    public void modificarTabla(String[][] matriz) {
+    public void modificarTabla(String[][] matriz, ArrayList<String> simbolos) {
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
                 matriz,
                 new String[]{
@@ -147,13 +238,14 @@ public class AutomataView extends javax.swing.JFrame {
         ));
     }
     
-    public String[][] crearMatriz(ArrayList<String> estados, ArrayList<Integer> aceptacion, ArrayList<ArrayList<String>> transiciones) {
-        String[][] matriz = new String[estados.size()][4];
+    public String[][] crearMatriz(ArrayList<String> estados, ArrayList<String> simbolos, ArrayList<Integer> aceptacion, ArrayList<ArrayList<String>> transiciones) {
+        String[][] matriz = new String[estados.size()][simbolos.size()];
         for (int i = 0; i < estados.size(); i++) {
             matriz[i][0] = estados.get(i);
-            matriz[i][1] = transiciones.get(i).get(0);
-            matriz[i][2] = transiciones.get(i).get(1);
-            matriz[i][3] = aceptacion.get(i).toString();
+            for (int j = 1; j < simbolos.size(); j++) {
+                matriz[i][j] = transiciones.get(i).get(j);
+            }
+            matriz[i][simbolos.size()-1] = aceptacion.get(i).toString();
         }
         return matriz;
     }
@@ -167,6 +259,29 @@ public class AutomataView extends javax.swing.JFrame {
             }
         }
         return encontrado;
+    }
+    
+    public int buscarEnVector(String a, String[] v) {
+        int k = 0;
+        for (int i = 0; i < v.length; i++) {
+            if(a.equalsIgnoreCase(v[i])){
+                k = i;
+                return k;
+            }
+        }
+        return k;
+    }
+    
+    public int buscarEnMatriz(String[][] m, String a){
+        int k = 0;
+        
+        for (int i = 0; i < m.length; i++) {
+            if(a.equalsIgnoreCase(m[i][0])){
+                k = i;
+                return k;
+            }
+        }
+        return k;
     }
     
     public boolean revisaValida(int[] vector) {
@@ -421,6 +536,26 @@ public class AutomataView extends javax.swing.JFrame {
 
     private void btnSimplificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimplificarActionPerformed
         // TODO add your handling code here:
+        
+        if (!automata1.esVacio()) {
+
+            automata1.removerExtranos();
+            automata1.simplificarEquivalentes();
+
+            estados = automata1.getEstadosNuevos();
+            aceptacion = automata1.getValidaNuevos();
+            transiciones = automata1.getTransicionesNuevas();
+
+            jTextArea1.setText(jTextArea1.getText() + "\nAUTÓMATA SIMPLIFICADO\n" + automata1.mostrarAutomata());
+            matriz = crearMatriz(estados, simbolos, aceptacion, transiciones);
+            modificarTabla(matriz, simbolos);
+            btnVerificar.setEnabled(true);
+            btnSimplificar.setEnabled(false);
+
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Autómata vacío, no se puede simplificar", "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+
     }//GEN-LAST:event_btnSimplificarActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
@@ -434,54 +569,38 @@ public class AutomataView extends javax.swing.JFrame {
         
         nEstados = (String[]) gramatica.getNoTerminales().toArray(new String[gramatica.getNoTerminales().size()]);
         nSimbolos = (String[]) gramatica.getTerminales().toArray(new String[gramatica.getTerminales().size()]);
+        aceptacion = new ArrayList<>();
         
-        for (int i = 0; i < matriz.length; i++) {
-            for (int j = 0; j < matriz[i].length; j++) {
-                nombres[i] = matriz[i][0];
-                siguiente0[i] = matriz[i][1];
-                siguiente1[i] = matriz[i][2];
-                valida[i] = Integer.parseInt(matriz[i][3]);
+        ArrayList<String> simbolos = new ArrayList<String>();
+        ArrayList<String> estados = new ArrayList<String>();
+        Collections.addAll(simbolos, nSimbolos); 
+        Collections.addAll(estados, nEstados); 
+        
+        ArrayList<String> transicion;
+        transiciones = new ArrayList<>();
+        
+        for (int i = 0; i < nEstados.length; i++) {
+            aceptacion.add((Integer.parseInt(matriz[i][nSimbolos.length-1])));
+            transicion = new ArrayList<>();
+            for (int j = 1; j < nSimbolos.length; j++) {
+                transicion.add(matriz[i][j]);
             }
+            transiciones.add(transicion);
         }
-        boolean acepta1 = revisaTrancisiones0(siguiente0, nombres);
-        boolean acepta2 = revisaTrancisiones1(siguiente1, nombres);
-        boolean acepta3 = revisaValida(valida);
-
-        if ((acepta1 == true) && (acepta2 == true) && (acepta3 == true)) {
-            String datos = "";
-            estados = new ArrayList<>();
-            aceptacion = new ArrayList<>();
-            ArrayList<String> transicion;
-            simbolos = new ArrayList<>();
-            transiciones = new ArrayList<>();
-            for (int i = 0; i < matriz.length; i++) {
-                estados.add(matriz[i][0]);
-                aceptacion.add(Integer.parseInt(matriz[i][3]));
-                transicion = new ArrayList<>();
-                transicion.add(matriz[i][1]);
-                transicion.add(matriz[i][2]);
-                transiciones.add(transicion);
-            }
-            simbolos.add("0");
-            simbolos.add("1");
+        automata1 = new Automata(estados, simbolos, aceptacion, transiciones);
+        String tipo = automata1.tipoAutomata();
+        if (tipo.equals("AFND")) {
+            automata1.pasarAFDerterministico();
+            estados = automata1.getEstadosNuevos();
+            aceptacion = automata1.getValidaNuevos();
+            transiciones = automata1.getTransicionesNuevas();
+            jTextArea1.setText("AUTÓMATA FINITO NO DETERMINÍSTICO\n" + automata1.mostrarAutomata() + "\n");
+            matriz = crearMatriz(estados, simbolos, aceptacion, transiciones);
+            modificarTabla(matriz, simbolos);
             automata1 = new Model.Automata(estados, simbolos, aceptacion, transiciones);
-            String tipo = automata1.tipoAutomata();
-            if (tipo.equals("AFND")) {
-                automata1.pasarAFDerterministico();
-                estados = automata1.getEstadosNuevos();
-                aceptacion = automata1.getValidaNuevos();
-                transiciones = automata1.getTransicionesNuevas();
-                jTextArea1.setText("AUTÓMATA FINITO NO DETERMINÍSTICO\n" + automata1.mostrarAutomata() + "\n");
-                matriz = crearMatriz(estados, aceptacion, transiciones);
-                modificarTabla(matriz);
-                automata1 = new Model.Automata(estados, simbolos, aceptacion, transiciones);
-            }
-            jTextArea1.setText(jTextArea1.getText() + "AUTÓMATA FINITO DETERMINÍSTICO\n" + automata1.mostrarAutomata());
-            
-            btnSimplificar.setEnabled(true);
-        } else {
-            JOptionPane.showMessageDialog(rootPane, "Debe revisar los datos ingresados", "ERROR", JOptionPane.INFORMATION_MESSAGE);
         }
+        jTextArea1.setText(jTextArea1.getText() + "AUTÓMATA FINITO DETERMINÍSTICO\n" + automata1.mostrarAutomata());
+        btnSimplificar.setEnabled(true);
     }//GEN-LAST:event_btnConvertirActionPerformed
 
     
