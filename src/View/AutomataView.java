@@ -34,7 +34,7 @@ public class AutomataView extends javax.swing.JFrame {
         try {
             gramatica = new Gramatica("gramatica_linealderecha.txt");
             //gramatica = new Gramatica("gramatica_especial.txt");
-        } catch (FileNotFoundException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(AutomataView.class.getName()).log(Level.SEVERE, null, ex);
         }
         

@@ -348,4 +348,26 @@ public class Gramatica {
     public boolean esSimplificable(){
         return (!noTerminalesMuertos.isEmpty() || !noTerminalesInalcanzables.isEmpty());
     }
+    
+    public Gramatica organizarGramatica(){
+        ArrayList<Produccion> produccionesCopia = (ArrayList<Produccion>) producciones.clone();
+        ArrayList<Produccion> produccionesOrdenadas = new ArrayList<>();
+        while (!produccionesCopia.isEmpty()) {
+            ArrayList<Produccion> produccionesEliminadas = new ArrayList<>();
+            Produccion produccion1 = produccionesCopia.get(0);
+            produccionesOrdenadas.add(produccion1);
+            produccionesEliminadas.add(produccion1);
+            for (int i = 1; i < produccionesCopia.size(); i++) {
+                Produccion produccionActual = produccionesCopia.get(i);
+                String expIz_prodActual = produccionActual.getLadoIzq().getExpresion();
+                String expIz_prod1 = produccion1.getLadoIzq().getExpresion();
+                if (expIz_prod1.compareTo(expIz_prodActual) == 0) {
+                    produccionesOrdenadas.add(produccionActual);
+                    produccionesEliminadas.add(produccionActual);
+                }
+            }
+            produccionesCopia.removeAll(produccionesEliminadas);
+        }
+        return new Gramatica(produccionesOrdenadas);
+    }
 }
