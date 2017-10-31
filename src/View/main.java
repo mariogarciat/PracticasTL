@@ -1,5 +1,7 @@
 package View;
 
+import Model.Gramatica;
+import Model.Produccion;
 import control.FileCreator;
 import control.Txt_gramatica_parser;
 import java.io.File;
@@ -7,6 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -14,7 +18,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileFilter;
@@ -23,6 +26,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class main extends javax.swing.JFrame {
 
     String rutaProyecto;
+    Gramatica gramatica;
 
     public main() {
         this.setResizable(false);
@@ -37,7 +41,6 @@ public class main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
         jButtonCargar = new javax.swing.JButton();
         jButtonSimplificar = new javax.swing.JButton();
         jButtonAutomata = new javax.swing.JButton();
@@ -66,6 +69,11 @@ public class main extends javax.swing.JFrame {
         });
 
         jButtonAutomata.setText("Autómata");
+        jButtonAutomata.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAutomataActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Gramática");
 
@@ -95,81 +103,168 @@ public class main extends javax.swing.JFrame {
 
         jLabel2.setText("File Name: ");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(96, 96, 96)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(44, 44, 44)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButtonBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButtonCargar, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(13, 13, 13)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(29, 29, 29)
-                                        .addComponent(jLabel2))
-                                    .addComponent(jTextFileName, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(34, 34, 34)
-                                .addComponent(jButtonGuardar))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(174, 174, 174)
-                        .addComponent(jLabel1)))
-                .addContainerGap(51, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jButtonSimplificar)
-                .addGap(26, 26, 26)
-                .addComponent(jButtonAutomata)
-                .addGap(59, 59, 59))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButtonCargar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(35, 35, 35)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFileName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonGuardar)
-                        .addGap(0, 82, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonAutomata)
-                    .addComponent(jButtonSimplificar))
-                .addGap(24, 24, 24))
-        );
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(108, 108, 108)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(40, 40, 40)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(27, 27, 27)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButtonBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButtonCargar, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(67, 67, 67)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jButtonSimplificar)
+                                    .addComponent(jButtonAutomata)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(92, 92, 92)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(29, 29, 29)
+                                .addComponent(jLabel2))
+                            .addComponent(jTextFileName, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addComponent(jButtonGuardar)))))
+                .addContainerGap(54, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(26, 26, 26)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButtonCargar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(86, 86, 86)
+                        .addComponent(jButtonSimplificar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonAutomata))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFileName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonGuardar)))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jTextFileNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFileNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFileNameActionPerformed
+
+    private void jButtonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGuardarActionPerformed
+
+        if (jTextAreaGramatica.getText().compareTo("") != 0) {
+            if (jTextFileName.getText().compareTo("") != 0) {
+
+                actualizarGramatica();
+
+                // método para crear el archivo
+                File archivo = FileCreator.crearArchivoTXT(rutaProyecto, jTextFileName.getText());
+
+                // aqui método para escribir en un archivo de texto
+                try {
+                    FileCreator.escribirArchivo(archivo, gramatica.getProducciones());
+                } catch (IOException ex) {
+                    Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                JOptionPane.showMessageDialog(this, "Gramática guardada en\n"
+                        + rutaProyecto);
+            } else {
+                JOptionPane.showMessageDialog(this, "Asígnele un nombre al archivo");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "El área de trabajo está vacía");
+        }
+
+
+    }//GEN-LAST:event_jButtonGuardarActionPerformed
+
+    private void jButtonBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBorrarActionPerformed
+        if (jTextAreaGramatica.getText().compareTo("") == 0) {
+            return;
+        }
+
+        String[] options = new String[2];
+        options[0] = "Sí";
+        options[1] = "No";
+        String mensaje = "¿Está seguro que desea borrar\nel espacio de trabajo acutal?";
+        int respuesta = JOptionPane.showOptionDialog(this, mensaje, "", 0, JOptionPane.INFORMATION_MESSAGE, null, options, null);
+        // respuesta = 1 sí elige NO
+        // respuesta = 0 sí elige SÍ
+        if (respuesta == 0) {
+            jTextAreaGramatica.setText(null);
+        }
+        
+        restaurarValores();
+    }//GEN-LAST:event_jButtonBorrarActionPerformed
+
+    private void jButtonSimplificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSimplificarActionPerformed
+        try {
+            actualizarGramatica();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "La gramática ingresada contiene errores sintácticos \n"
+                    + "Revise los parámetros de escritura establecidos para una gramática");
+            return;
+        }
+        if (gramatica.esSimplificable()) {
+            TreeSet<String> noTerminalesVivos = gramatica.getNoTerminalesVivos();
+            TreeSet<String> noTerminalesMuertos = gramatica.getNoTerminalesMuertos();
+            TreeSet<String> noTerminalesInalcanzables = gramatica.getNoTerminalesInalcanzables();
+            
+
+            String noTVivos = "";
+            Iterator<String> it = noTerminalesVivos.iterator();
+            while (it.hasNext()) {
+                noTVivos = noTVivos.concat(it.next() + "\n");
+            }
+            
+            
+            String noTMuertos = "";
+            it = noTerminalesMuertos.iterator();
+            while (it.hasNext()) {
+                noTMuertos = noTMuertos.concat(it.next() + "\n");
+            }
+            
+            String noTInalcanzables = "";
+            it = noTerminalesInalcanzables.iterator();
+            while (it.hasNext()) {
+                noTInalcanzables = noTInalcanzables.concat(it.next() + "\n");
+            }
+            
+            String total = "No terminales vivos: \n" + noTVivos + 
+                    "No terminales muertos: \n" + noTMuertos + 
+                    "No terminales inalcanzables: \n" + noTInalcanzables;
+            
+            JOptionPane.showMessageDialog(this, total);
+            
+            gramatica = gramatica.simplificar();
+            actualizarPantalla();
+
+        } else {
+            JOptionPane.showMessageDialog(this, "La gramática no es simplificable");
+        }
+
+    }//GEN-LAST:event_jButtonSimplificarActionPerformed
 
     private void jButtonCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCargarActionPerformed
         if (jTextAreaGramatica.getText().isEmpty()) {
@@ -190,11 +285,15 @@ public class main extends javax.swing.JFrame {
             if (returnVal == JFileChooser.APPROVE_OPTION) { //verifica que se le haya dado click al botón "abrir"
                 currentFile = fc.getSelectedFile();
                 try {
+                    ArrayList<Produccion> producciones = Txt_gramatica_parser.getProducciones(currentFile);
+                    gramatica = new Gramatica(producciones);
                     mostarArchivoCargado(currentFile);
-                } catch (IOException ex) {
-                    Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "El archivo de texto que intenta cargar no existe o no cumple con la \nforma de una gramática independiente del contexto");
                 }
             }
+            
+            restaurarValores();
 
         } else {
             JOptionPane.showMessageDialog(rootPane, "Actualmente hay texto en el área de trabajo.\n\n"
@@ -202,42 +301,9 @@ public class main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonCargarActionPerformed
 
-    private void jButtonBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBorrarActionPerformed
-        if (jTextAreaGramatica.getText().compareTo("") == 0) {
-            return;
-        }
-
-        JFrame frame = new JFrame();
-        String[] options = new String[2];
-        options[0] = new String("Sí");
-        options[1] = new String("No");
-        String mensaje = "¿Está seguro que desea borrar\nel espacio de trabajo acutal?";
-        int respuesta = JOptionPane.showOptionDialog(this, mensaje, "", 0, JOptionPane.INFORMATION_MESSAGE, null, options, null);
-        // respuesta = 1 sí elige NO
-        // respuesta = 0 sí elige SÍ
-        if (respuesta == 0) {
-            jTextAreaGramatica.setText(null);
-        }
-
-    }//GEN-LAST:event_jButtonBorrarActionPerformed
-
-    private void jButtonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGuardarActionPerformed
-        // método para crear el archivo
-        FileCreator.crearArchivoTXT(rutaProyecto, jTextFileName.getText());
-        // aqui método para escribir en un archivo de texto
-        
-        
-        JOptionPane.showMessageDialog(this, "Gramática guardada");
-
-    }//GEN-LAST:event_jButtonGuardarActionPerformed
-
-    private void jTextFileNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFileNameActionPerformed
+    private void jButtonAutomataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAutomataActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFileNameActionPerformed
-
-    private void jButtonSimplificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSimplificarActionPerformed
-
-    }//GEN-LAST:event_jButtonSimplificarActionPerformed
+    }//GEN-LAST:event_jButtonAutomataActionPerformed
 
     /**
      * @param args the command line arguments
@@ -282,7 +348,6 @@ public class main extends javax.swing.JFrame {
     private javax.swing.JButton jButtonSimplificar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextAreaGramatica;
     private javax.swing.JTextField jTextFileName;
@@ -320,14 +385,6 @@ public class main extends javax.swing.JFrame {
         this.jLabel1 = jLabel1;
     }
 
-    public JPanel getjPanel1() {
-        return jPanel1;
-    }
-
-    public void setjPanel1(JPanel jPanel1) {
-        this.jPanel1 = jPanel1;
-    }
-
     public JScrollPane getjScrollPane1() {
         return jScrollPane1;
     }
@@ -345,16 +402,47 @@ public class main extends javax.swing.JFrame {
     }
 
     private void mostarArchivoCargado(File archivo) throws FileNotFoundException, IOException {
-        ArrayList<String> renglonesTexto = new ArrayList<>();
+        ArrayList<String> renglonesTexto;
 
         FileReader f = new FileReader(archivo);
-        renglonesTexto = Txt_gramatica_parser.getProductionArrayList_(f);
+        renglonesTexto = Txt_gramatica_parser.getRenglones(f);
 
         jTextAreaGramatica.setText(renglonesTexto.get(0));
         for (int i = 1; i < renglonesTexto.size(); i++) {
             String textoActual = jTextAreaGramatica.getText();
             jTextAreaGramatica.setText(textoActual + "\n" + renglonesTexto.get(i));
         }
+    }
+    
+
+    private void actualizarGramatica() {
+        String texto = jTextAreaGramatica.getText();
+        File temporalFile;
+        ArrayList<Produccion> producciones = null;
+        try {
+            temporalFile = File.createTempFile("ficheroTemporal", null);
+            temporalFile = FileCreator.escribirArchivo(temporalFile, texto);
+            producciones = Txt_gramatica_parser.getProducciones(temporalFile);
+            temporalFile.deleteOnExit();
+        } catch (Exception ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        gramatica = new Gramatica(producciones);
+    }
+
+    private void actualizarPantalla() {
+        ArrayList<Produccion> producciones = gramatica.getProducciones();
+
+        jTextAreaGramatica.setText(producciones.get(0).getProduccion());
+        for (int i = 1; i < producciones.size(); i++) {
+            String textoActual = jTextAreaGramatica.getText();
+            jTextAreaGramatica.setText(textoActual + "\n" + producciones.get(i).getProduccion());
+        }
+    }
+    
+    private void restaurarValores(){
+        jTextFileName.setText("");
     }
 
 }

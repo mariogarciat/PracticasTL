@@ -4,44 +4,29 @@ import Model.Expresion;
 import Model.Produccion;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Txt_gramatica_parser {
 
     /* --------------------- CAPTURA DE ARCHIVOS (FILES)  --------------------- */
-    public static ArrayList getProductionArrayList(File file) throws FileNotFoundException {
+    public static ArrayList<Produccion> getProducciones(File file) throws Exception {
 
         FileReader f = new FileReader(file);
-        try {
-            return getProductionArrayList(f);
-        } catch (IOException ex) {
-            System.out.println("Error en la lectura del archivo");
-            Logger.getLogger(Txt_gramatica_parser.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
+        return getProductionArrayList(f);
     }
 
-    public static ArrayList getProductionArrayList(String path) throws FileNotFoundException {
+    public static ArrayList getProductionArrayList(String path) throws Exception {
 
         FileReader f = new FileReader(path);
-        try {
-            return getProductionArrayList(f);
-        } catch (IOException ex) {
-            System.out.println("Error en la lectura del archivo");
-            Logger.getLogger(Txt_gramatica_parser.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
+        return getProductionArrayList(f);
     }
 
     // Fase 1: tomar los renglones del archivo .txt y almacenar cada uno de ellos en un ArrayList<String>
-    public static ArrayList<String> getProductionArrayList_(FileReader file) throws IOException {
+    public static ArrayList<String> getRenglones(FileReader file) throws IOException {
         ArrayList<String> producciones = new ArrayList<>();
         BufferedReader b = new BufferedReader(file);
 
@@ -56,7 +41,7 @@ public class Txt_gramatica_parser {
     // la depuración consiste simplemente en eliminar el indicativo de ordinalidad de cada producción
     // y obtener de cada producción. la expresión del lado derecho y a del lado izquierdo.
     private static ArrayList<Produccion> getProductionArrayList(FileReader file) throws IOException {
-        ArrayList<String> ap = getProductionArrayList_(file);
+        ArrayList<String> ap = getRenglones(file);
         ArrayList<Produccion> arrayProducciones = new ArrayList<>();
 
         for (Object o : ap) {
