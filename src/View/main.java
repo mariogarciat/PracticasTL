@@ -1,15 +1,11 @@
 package View;
 
-import control.Reader;
+import control.FileCreator;
 import control.Txt_gramatica_parser;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,8 +22,12 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class main extends javax.swing.JFrame {
 
+    String rutaProyecto;
+
     public main() {
+        this.setResizable(false);
         initComponents();
+        rutaProyecto = System.getProperty("user.dir");
     }
 
     /**
@@ -120,13 +120,14 @@ public class main extends javax.swing.JFrame {
                                 .addComponent(jButtonGuardar))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(174, 174, 174)
-                        .addComponent(jLabel1))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(110, 110, 110)
-                        .addComponent(jButtonSimplificar)
-                        .addGap(26, 26, 26)
-                        .addComponent(jButtonAutomata)))
+                        .addComponent(jLabel1)))
                 .addContainerGap(51, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jButtonSimplificar)
+                .addGap(26, 26, 26)
+                .addComponent(jButtonAutomata)
+                .addGap(59, 59, 59))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -147,11 +148,11 @@ public class main extends javax.swing.JFrame {
                         .addComponent(jButtonGuardar)
                         .addGap(0, 82, Short.MAX_VALUE))
                     .addComponent(jScrollPane1))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonAutomata)
                     .addComponent(jButtonSimplificar))
-                .addContainerGap())
+                .addGap(24, 24, 24))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -176,8 +177,7 @@ public class main extends javax.swing.JFrame {
             final JFileChooser fc = new JFileChooser();
 
             // modifica dónde va a estar el directorio cuando se abra la ventana
-            final String dir = System.getProperty("user.dir"); // retorna directorio del proyecto
-            File currentFile = new File(dir); // crea un objeto tipo File con el path del proyecto
+            File currentFile = new File(rutaProyecto); // crea un objeto tipo File con el path del proyecto
             fc.setCurrentDirectory(currentFile);
 
             // filtra los archivos que se muestran en el FileChooser. Sólo muestra archivos de texto
@@ -222,17 +222,12 @@ public class main extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonBorrarActionPerformed
 
     private void jButtonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGuardarActionPerformed
-        if (jTextAreaGramatica.getText().compareTo("") != 0) {
-            if (jTextFileName.getText().compareTo("") != 0) {
-                // método para crear archivo
-                // método para escribir en un archivo de texto
-                JOptionPane.showMessageDialog(this, "Gramática guardada");
-            } else {
-                JOptionPane.showMessageDialog(this, "Asígnele un nombre al archivo");
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "El área de trabajo está vacía");
-        }
+        // método para crear el archivo
+        FileCreator.crearArchivoTXT(rutaProyecto, jTextFileName.getText());
+        // aqui método para escribir en un archivo de texto
+        
+        
+        JOptionPane.showMessageDialog(this, "Gramática guardada");
 
     }//GEN-LAST:event_jButtonGuardarActionPerformed
 
