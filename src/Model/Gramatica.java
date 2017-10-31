@@ -344,8 +344,63 @@ public class Gramatica {
     public boolean esLinealPorDerecha() {
         return produccionesLinealesDerecha.size() == producciones.size();
     }
-    
-    public boolean esSimplificable(){
+
+    public boolean esSimplificable() {
         return (!noTerminalesMuertos.isEmpty() || !noTerminalesInalcanzables.isEmpty());
+    }
+
+    public Gramatica organizarGramatica() {
+        ArrayList<Produccion> produccionesCopia = (ArrayList<Produccion>) producciones.clone();
+        ArrayList<Produccion> produccionesOrdenadas = new ArrayList<>();
+        while (!produccionesCopia.isEmpty()) {
+            ArrayList<Produccion> produccionesEliminadas = new ArrayList<>();
+            Produccion produccion1 = produccionesCopia.get(0);
+            produccionesOrdenadas.add(produccion1);
+            produccionesEliminadas.add(produccion1);
+            for (int i = 1; i < produccionesCopia.size(); i++) {
+                Produccion produccionActual = produccionesCopia.get(i);
+                String expIz_prodActual = produccionActual.getLadoIzq().getExpresion();
+                String expIz_prod1 = produccion1.getLadoIzq().getExpresion();
+                if (expIz_prod1.compareTo(expIz_prodActual) == 0) {
+                    produccionesOrdenadas.add(produccionActual);
+                    produccionesEliminadas.add(produccionActual);
+                }
+            }
+            produccionesCopia.removeAll(produccionesEliminadas);
+        }
+        return new Gramatica(produccionesOrdenadas);
+    }
+
+    public ArrayList<String> getNoTerminalesOrganizados() {
+
+        TreeSet<String> noTerminalesCopia = (TreeSet<String>) noTerminales.clone();
+        ArrayList<String> noTerminalesOrganizados = new ArrayList<>();
+
+        for (Produccion produccion : producciones) {
+            //-- se analiza la expresión izquierda
+            String expIz = produccion.getLadoIzq().getExpresion();
+            if (noTerminalesCopia.contains(expIz)){
+                noTerminalesOrganizados.add(expIz);
+                noTerminalesCopia.remove(expIz);
+            }
+            
+            /*
+            //-- se analiza la expresión derecha
+            Expresion expDer = produccion.getLadoDer();
+            ArrayList<String> expDerOrdenada = expDer.getExpresionOrdenada();
+            for (String string : expDerOrdenada) {
+                if (noTerminalesCopia.contains(string)) {
+                    noTerminalesOrganizados.add(string);
+                    noTerminalesCopia.remove(string);
+                }
+            }
+            */
+            
+            if (noTerminalesCopia.isEmpty()) {
+                break;
+            }
+        }
+        
+        return noTerminalesOrganizados;
     }
 }

@@ -3,13 +3,15 @@ package Model;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.TreeSet;
 
 public class Cliente {
     public static void main(String[] args) throws Exception {
-        String rutaProyecto = System.getProperty("user.dir") + "\\pruebas";
-        System.out.println(rutaProyecto);
-        File archivo = crearArchivo(rutaProyecto, "textoPrueba");
-        escribirArchivo(archivo);
+        Gramatica gramatica = new Gramatica("gram.txt");
+        TreeSet<String> noTerminales = gramatica.getNoTerminales();
+        ArrayList<String> noTerminalesOrganizados = gramatica.getNoTerminalesOrganizados();
+        System.out.println("ok");
     }
     
     public static File crearArchivo(String ruta, String nombreFile) throws IOException {
@@ -26,4 +28,6 @@ public class Cliente {
         fw.write("\r\nJujuju");
         fw.close();
     }
+    
+    
 }
