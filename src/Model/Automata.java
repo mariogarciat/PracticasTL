@@ -146,9 +146,14 @@ public class Automata {
                     for (int i = 0; i < columnas; i++) {
                         com = "";
                         for (int j = 0; j < indices.size(); j++) {
-                            if (!com.contains(transiciones.get(indices.get(j)).get(i))) {
-                                com = com.concat("," + transiciones.get(indices.get(j)).get(i));
+                            if(transiciones.get(indices.get(j)).get(i) == null){
+                                com = com + "";
+                            }else{
+                                if (!com.contains(transiciones.get(indices.get(j)).get(i))) {
+                                    com = com.concat("," + transiciones.get(indices.get(j)).get(i));
+                                }
                             }
+                            
                         }
                         com = com.replaceFirst(",", "");
                         com = ordenar(com);

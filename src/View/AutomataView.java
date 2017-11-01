@@ -27,16 +27,19 @@ public class AutomataView extends javax.swing.JFrame {
     /**
      * Creates new form AutomataView
      */
-    public AutomataView() {
+    
+    Model.Gramatica gramatica;
+    
+    public AutomataView(Gramatica gramatica) {
         initComponents();
         
         getContentPane().setBackground(Color.LIGHT_GRAY);
         
         try {
-            //gramatica = new Gramatica("gramatica_lineal_derecha.txt");
-            //gramatica = new Gramatica("gramatica_especial.txt");
+            this.gramatica = gramatica;
             //gramatica = new Gramatica("gram.txt");
-            gramatica = new Gramatica("wea.txt");
+            //gramatica = new Gramatica("wea.txt");
+            //gramatica = new Gramatica("3full.txt");
             gramatica.organizarGramatica();
         } catch (Exception ex) {
             Logger.getLogger(AutomataView.class.getName()).log(Level.SEVERE, null, ex);
@@ -91,15 +94,35 @@ public class AutomataView extends javax.swing.JFrame {
                         k +=1;
                         w = w-1;
                     }else{
-                        matriz[z][w] = produccion.getLadoDer().getNoTerminales().first();
-                        matriz[z][simbolos.length-1] = "0";
-                        k +=1;
+                        if(produccion.getLadoDer().getTerminales().first().equals(nSimbolos[w-1])){
+                            matriz[z][w] = produccion.getLadoDer().getNoTerminales().first();
+                            matriz[z][simbolos.length-1] = "0";
+                            k +=1;
+                        }else{
+                            //vect[w-1] = null;
+                            w = w + 1;
+                        }
+                        
                     }
                 }else{
                     int nz = buscarEnMatriz(matriz, produccion.getLadoIzq().getNoTerminales().first());
                     int nw = buscarEnVector(produccion.getLadoDer().getTerminales().first(), simbolos);
-                    matriz[nz][nw] = matriz[nz][nw] + "," + produccion.getLadoDer().getNoTerminales().first();
-                    k = k + 1;
+                    if(matriz[nz][nw] == null){
+                        matriz[nz][nw] = "";
+                        matriz[nz][nw] = matriz[nz][nw] + produccion.getLadoDer().getNoTerminales().first();
+                        
+                        if(produccion.getLadoDer().getTerminales().first().equals("_")){                                
+                            matriz[nz][simbolos.length-1] = "1";
+                        }else{
+                            matriz[nz][simbolos.length-1] = "0";
+                        }
+                        
+                        k = k + 1;
+                    }else{
+                        matriz[nz][nw] = matriz[nz][nw] + "," + produccion.getLadoDer().getNoTerminales().first();
+                        k = k + 1;
+                    }
+                    
                 }
                 w = w+1;
                 if(w > nSimbolos.length){w = w-1;}
@@ -115,7 +138,7 @@ public class AutomataView extends javax.swing.JFrame {
                 simbolos
         ));
         btnVerificar.setEnabled(false);
-        
+        btnSimplificar.setEnabled(false);
         
     }
 
@@ -129,7 +152,7 @@ public class AutomataView extends javax.swing.JFrame {
     String siguiente0[];
     String siguiente1[];
     String siguientes[];
-    Model.Gramatica gramatica;
+    //Model.Gramatica gramatica;
     int valida[];
     Model.Estado estado;
     ArrayList<Model.Estado> arreglo = new ArrayList<Model.Estado>();
@@ -138,6 +161,10 @@ public class AutomataView extends javax.swing.JFrame {
     ArrayList<String> simbolos;
     ArrayList<ArrayList<String>> transiciones;
     Model.Automata automata1;
+
+    private AutomataView() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     //Método que guarda el contenido de la tabla en una matriz de nFilas x 4 colúmnas    
     public String[][] guardarEnMatriz() {
@@ -148,14 +175,6 @@ public class AutomataView extends javax.swing.JFrame {
         String[][] matriz = new String[nRow][nCol];
         for (i = 0; i < nRow; i++) {
             for (j = 0; j < nCol; j++) {
-//                if(jTable1.getValueAt(i, j) != null){
-//                    //matriz[i][j] = (String) jTable1.getValueAt(i, j);
-//                    matriz[i][j] = (String)jTable1.getValueAt(nRow, nCol);
-//                    
-//                }else{
-//                    matriz[i][j] = "";
-//                    
-//                }
                 matriz[i][j] = (String)jTable1.getValueAt(i, j);
                 System.out.println(matriz[i][j]);
             }
@@ -230,34 +249,34 @@ public class AutomataView extends javax.swing.JFrame {
         return acepta;
     }
     
-    public boolean revisaTrancisiones0(String[] vector1, String[] vector2) {
-        boolean acepta = false;
-        for (int j = 0; j < vector2.length; j++) {
-            if (buscar(vector1[j], vector2) == true) {
-                acepta = true;
-                return acepta;
-            } else {
-                JOptionPane.showMessageDialog(null, "La transición debe hacerse hacia uno de los estados."
-                        + "\nError con: " + vector1[j] + " en fila " + j + " columna 1", "ERROR", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-        return acepta;
-    }
+//    public boolean revisaTrancisiones0(String[] vector1, String[] vector2) {
+//        boolean acepta = false;
+//        for (int j = 0; j < vector2.length; j++) {
+//            if (buscar(vector1[j], vector2) == true) {
+//                acepta = true;
+//                return acepta;
+//            } else {
+//                JOptionPane.showMessageDialog(null, "La transición debe hacerse hacia uno de los estados."
+//                        + "\nError con: " + vector1[j] + " en fila " + j + " columna 1", "ERROR", JOptionPane.ERROR_MESSAGE);
+//            }
+//        }
+//        return acepta;
+//    }
     
-    public boolean revisaTrancisiones1(String[] vector1, String[] vector2) {
-        boolean acepta = false;
-        for (int j = 0; j < vector1.length; j++) {
-            if (buscar(vector1[j], vector2) == true) {
-                acepta = true;
-                return acepta;
-            } else {
-                JOptionPane.showMessageDialog(null, "La transición debe hacerse hacia uno de los estados."
-                        + "\nError con: " + vector1[j] + " en fila " + j + " columna 1", "ERROR", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-        return acepta;
-    }
-    
+//    public boolean revisaTrancisiones1(String[] vector1, String[] vector2) {
+//        boolean acepta = false;
+//        for (int j = 0; j < vector1.length; j++) {
+//            if (buscar(vector1[j], vector2) == true) {
+//                acepta = true;
+//                return acepta;
+//            } else {
+//                JOptionPane.showMessageDialog(null, "La transición debe hacerse hacia uno de los estados."
+//                        + "\nError con: " + vector1[j] + " en fila " + j + " columna 1", "ERROR", JOptionPane.ERROR_MESSAGE);
+//            }
+//        }
+//        return acepta;
+//    }
+//    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -476,6 +495,13 @@ public class AutomataView extends javax.swing.JFrame {
             String auxEst[] = {"ESTADO"};
             String auxVal[] = {"Validación"};
             nSimbolos = (String[]) gramatica.getTerminales().toArray(new String[gramatica.getTerminales().size()]);
+            
+            List<String> list =  new ArrayList<String>();
+            Collections.addAll(list, nSimbolos); 
+            list.remove("_");
+            nSimbolos = list.toArray(new String[list.size()]);
+            
+            
             String[] simb = Stream.of(auxEst,nSimbolos,auxVal).flatMap(Stream::of).toArray(String[]::new);
             automata1.removerExtranos();
             automata1.simplificarEquivalentes();
@@ -551,12 +577,6 @@ public class AutomataView extends javax.swing.JFrame {
     
     
     
-    
-    
-    
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -607,4 +627,9 @@ public class AutomataView extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
     // End of variables declaration//GEN-END:variables
+
+
+
+   
+
 }

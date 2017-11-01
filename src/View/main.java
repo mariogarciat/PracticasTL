@@ -319,14 +319,13 @@ public class main extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonCargarActionPerformed
 
     private void jButtonAutomataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAutomataActionPerformed
-        this.setVisible(false);
-        JFrame automata = new AutomataView();
-        automata.setVisible(true);
+        
+        new AutomataView(gramatica).setVisible(true);
+        
     }//GEN-LAST:event_jButtonAutomataActionPerformed
 
     private void btnAutomataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAutomataActionPerformed
         // TODO add your handling code here:
-        new AutomataView().setVisible(true);
     }//GEN-LAST:event_btnAutomataActionPerformed
 
     private void jButtonOrdenarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOrdenarActionPerformed
