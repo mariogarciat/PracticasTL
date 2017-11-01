@@ -72,9 +72,14 @@ public class AutomataView extends javax.swing.JFrame {
                 l=l+1;
             } 
             h=h+1;
-            
+            if(h == producciones.size()){
+                JOptionPane.showMessageDialog(rootPane, "La gramática no es de tipo especial");
+                break;
+            }
         }
+        
         nEstados = gramatica.getNoTerminalesOrganizados().toArray(nEstados);
+        
         int k = 0;
         int z = 0;
         int w = 1;
@@ -102,7 +107,6 @@ public class AutomataView extends javax.swing.JFrame {
                             //vect[w-1] = null;
                             w = w + 1;
                         }
-                        
                     }
                 }else{
                     int nz = buscarEnMatriz(matriz, produccion.getLadoIzq().getNoTerminales().first());
@@ -110,19 +114,16 @@ public class AutomataView extends javax.swing.JFrame {
                     if(matriz[nz][nw] == null){
                         matriz[nz][nw] = "";
                         matriz[nz][nw] = matriz[nz][nw] + produccion.getLadoDer().getNoTerminales().first();
-                        
                         if(produccion.getLadoDer().getTerminales().first().equals("_")){                                
                             matriz[nz][simbolos.length-1] = "1";
                         }else{
                             matriz[nz][simbolos.length-1] = "0";
                         }
-                        
                         k = k + 1;
                     }else{
                         matriz[nz][nw] = matriz[nz][nw] + "," + produccion.getLadoDer().getNoTerminales().first();
                         k = k + 1;
                     }
-                    
                 }
                 w = w+1;
                 if(w > nSimbolos.length){w = w-1;}
@@ -130,9 +131,7 @@ public class AutomataView extends javax.swing.JFrame {
             }
             break;
         }
-//        matriz = new String[4][4]; 
-//        String[] sim = {"estado", "cero", "uno", "validacion"}; 
-        //String matriz[][] = {{"sa", "fdsfa", "dfae"}, {"sa", "fdsfa", "dfae"}, {"sa", "fdsfa", "dfae"}};
+        
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
                 matriz,
                 simbolos
@@ -142,9 +141,7 @@ public class AutomataView extends javax.swing.JFrame {
         
     }
 
-    
     String[] nEstados;
-    //String[] producciones;
     ArrayList<Model.Produccion> producciones;
     String nSimbolos[];
     String matriz[][];
@@ -152,7 +149,6 @@ public class AutomataView extends javax.swing.JFrame {
     String siguiente0[];
     String siguiente1[];
     String siguientes[];
-    //Model.Gramatica gramatica;
     int valida[];
     Model.Estado estado;
     ArrayList<Model.Estado> arreglo = new ArrayList<Model.Estado>();
