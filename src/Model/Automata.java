@@ -52,20 +52,6 @@ public class Automata {
     
     //Almacena en una variable de tipo String llamada datos la información
     //Correspondiente a un autómata creado apartir de instancias de la clase
-    //Estado y almacenado en un ArrayLIst al cual llamamos arreglo
-//    public String mostrar(String datos, ArrayList<Estado> arreglo){
-//        for (int i = 0; i < arreglo.size(); i++) {
-//            datos = datos + "Estado: --------------- " + arreglo.get(i).getNombre();
-//            datos = datos + "\nSiguiente con 0: --- " + arreglo.get(i).getSiguiente0();
-//            datos = datos + "\nSiguiente con 1: --- " + arreglo.get(i).getSiguiente1();
-//            datos = datos + "\nSiguiente con 1: --- " + arreglo.get(i).getTransiciones();
-//            datos = datos + "\nValida: ---------------- " + arreglo.get(i).getValida() + "\n\n";
-//        }
-//        return datos;
-//    }
-    
-    //Almacena en una variable de tipo String llamada datos la información
-    //Correspondiente a un autómata creado apartir de instancias de la clase
     //Automata y almacenado en un conjusnto de ArrayList a los cuales llamamos 
     //estado, transiciones y aceptacion.
     public String mostrarAutomata() {
@@ -370,23 +356,24 @@ public class Automata {
     //Método para validar una hilera de símbolos de entrada en un autómata finito
     //Retorna un vector de tipo Object, el cual contiene, en la posición 0 un valor 
     //0 ó 1 dependiendo de si la hilera se rechaza o se acepta respectivamente,
-    //en la posición 0 del vector, se encuentra almacenada una variable llamada
+    //en la posición 1 del vector, se encuentra almacenada una variable llamada
     //recorrido, la cual contiene la información correspondiente al reccorrido que 
     //se da en el autómata con dicha hilera 
-    /*public Object[] validarCadena(ArrayList<Estado> arreglo, String[] vector) {
+    
+    public Object[] validarHilera(ArrayList<Estado> arreglo, String[] vector, String[] simbolos) {
         Object[] retorno = new Object[2];
         String recorrido = "";
         int valida = 0;
         String siguienteEstado = "";
+        String[] siguientes = {""};
         Estado estadoActual = arreglo.get(0);
         recorrido = "Estado inicial ==> " + estadoActual.getNombre();
         for (int i = 0; i < vector.length; i++) {
-            if (vector[i].equals("0")) {
-                siguienteEstado = estadoActual.getSiguiente0();
-                recorrido = recorrido + " ----- Entra un 0 ";
-            } else {
-                siguienteEstado = estadoActual.getSiguiente1();
-                recorrido = recorrido + " ----- Entra un 1 ";
+            for (int j = 0; j < simbolos.length; j++) {
+                if(vector[i].equals(simbolos[j])){
+                    siguienteEstado = estadoActual.getSiguientes()[j];
+                    recorrido = recorrido + "---- Entra un " + simbolos[j];
+                }
             }
             estadoActual = avanceEstado(arreglo, siguienteEstado);
             recorrido = recorrido + "\nCambia al estado " + estadoActual.getNombre();
@@ -402,7 +389,7 @@ public class Automata {
         retorno[0] = valida;
         retorno[1] = recorrido;
         return retorno;
-    }*/
+    }
 
     //Ordena alfabéticamente un estado
     public String ordenar(String estado) {

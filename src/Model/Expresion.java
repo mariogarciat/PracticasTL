@@ -19,8 +19,6 @@ public class Expresion {
         getAll_();
     }
     
-    
-
     private void getAll_(){
         int charIndex = 0;
         int numCaracteres = expresion.length();

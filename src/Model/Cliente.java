@@ -8,10 +8,9 @@ import java.util.TreeSet;
 
 public class Cliente {
     public static void main(String[] args) throws Exception {
-        Gramatica gramatica = new Gramatica("gram.txt");
-        TreeSet<String> noTerminales = gramatica.getNoTerminales();
-        ArrayList<String> noTerminalesOrganizados = gramatica.getNoTerminalesOrganizados();
-        System.out.println("ok");
+        View.main vista = new View.main();
+        vista.setLocationRelativeTo(null);
+        vista.setVisible(true);
     }
     
     public static File crearArchivo(String ruta, String nombreFile) throws IOException {

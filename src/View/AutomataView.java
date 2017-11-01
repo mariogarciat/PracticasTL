@@ -87,6 +87,9 @@ public class AutomataView extends javax.swing.JFrame {
         while (z < nEstados.length){
             while (w <= nSimbolos.length){
                 Model.Produccion produccion = producciones.get(k);
+                if(produccion.getLadoDer().getNoTerminales().size() > 1){
+                    JOptionPane.showMessageDialog(rootPane, "La gramática no es de tipo especial");
+                }
                 if (!produccion.getLadoIzq().getNoTerminales().first().equals(nEstados[z])){
                     z = z + 1;
                     w = 1;
@@ -138,6 +141,7 @@ public class AutomataView extends javax.swing.JFrame {
         ));
         btnVerificar.setEnabled(false);
         btnSimplificar.setEnabled(false);
+        jTable1.setEnabled(false);
         
     }
 
@@ -146,8 +150,6 @@ public class AutomataView extends javax.swing.JFrame {
     String nSimbolos[];
     String matriz[][];
     String nombres[];
-    String siguiente0[];
-    String siguiente1[];
     String siguientes[];
     int valida[];
     Model.Estado estado;
@@ -245,34 +247,6 @@ public class AutomataView extends javax.swing.JFrame {
         return acepta;
     }
     
-//    public boolean revisaTrancisiones0(String[] vector1, String[] vector2) {
-//        boolean acepta = false;
-//        for (int j = 0; j < vector2.length; j++) {
-//            if (buscar(vector1[j], vector2) == true) {
-//                acepta = true;
-//                return acepta;
-//            } else {
-//                JOptionPane.showMessageDialog(null, "La transición debe hacerse hacia uno de los estados."
-//                        + "\nError con: " + vector1[j] + " en fila " + j + " columna 1", "ERROR", JOptionPane.ERROR_MESSAGE);
-//            }
-//        }
-//        return acepta;
-//    }
-    
-//    public boolean revisaTrancisiones1(String[] vector1, String[] vector2) {
-//        boolean acepta = false;
-//        for (int j = 0; j < vector1.length; j++) {
-//            if (buscar(vector1[j], vector2) == true) {
-//                acepta = true;
-//                return acepta;
-//            } else {
-//                JOptionPane.showMessageDialog(null, "La transición debe hacerse hacia uno de los estados."
-//                        + "\nError con: " + vector1[j] + " en fila " + j + " columna 1", "ERROR", JOptionPane.ERROR_MESSAGE);
-//            }
-//        }
-//        return acepta;
-//    }
-//    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -321,6 +295,11 @@ public class AutomataView extends javax.swing.JFrame {
 
         btnVerificar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnVerificar.setText("Verificar hilera");
+        btnVerificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerificarActionPerformed(evt);
+            }
+        });
 
         btnConvertir.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnConvertir.setText("Convertir");
@@ -570,8 +549,61 @@ public class AutomataView extends javax.swing.JFrame {
         btnSimplificar.setEnabled(true);
     }//GEN-LAST:event_btnConvertirActionPerformed
 
-    
-    
+    private void btnVerificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerificarActionPerformed
+        // TODO add your handling code here:
+        String auxEst[] = {"ESTADO"};
+        String auxVal[] = {"Validación"};
+        
+        try {
+            String hilera = "";
+            hilera = JOptionPane.showInputDialog(rootPane, "Ingrese la hilera a validar: ", "HILERA A VALIDAR", JOptionPane.QUESTION_MESSAGE);
+            String[] vectHilera = new String[hilera.length()];
+            for (int i = 0; i < vectHilera.length; i++) {
+                vectHilera[i] = String.valueOf(hilera.charAt(i));
+            }
+            
+            String[] nSimbolos = (String[]) gramatica.getTerminales().toArray(new String[gramatica.getTerminales().size()]);
+            List<String> list =  new ArrayList<String>();
+            Collections.addAll(list, nSimbolos); 
+            list.remove("_");
+            nSimbolos = list.toArray(new String[list.size()]);
+            String[] simb = Stream.of(auxEst,nSimbolos,auxVal).flatMap(Stream::of).toArray(String[]::new);
+            estados = automata1.getEstadosNuevos();
+            transiciones = automata1.getTransicionesNuevas();
+            
+            for (int i = 0; i < vectHilera.length; i++) {
+                    if (buscar(vectHilera[i], simb) == false) {
+                        i = i+1;
+                        JOptionPane.showMessageDialog(rootPane, "Hilera: "+ hilera+"\nEl símbolo de la posición " + i + " no está permitido",
+                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+            }
+            
+            for (int i = 0; i < estados.size(); i++) {
+                String nombre = estados.get(i);
+                String[] siguientes = (String[])transiciones.get(i).toArray(new String[transiciones.get(i).size()]);
+                int valida = aceptacion.get(i);
+                Model.Estado estado = new Model.Estado(nombre, valida, siguientes);
+                arreglo.add(estado);
+            }
+
+            Object[] retorno = automata1.validarHilera(arreglo, vectHilera, nSimbolos);
+            int k = Integer.parseInt(retorno[0].toString());
+            if (k == 1) {
+                jTextArea2.setText("Hilera a evaluar: " + hilera + "\n\n"
+                        + "\n" + retorno[1]);
+                JOptionPane.showMessageDialog(rootPane, "Hilera aceptada", "ACEPTA", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                jTextArea2.setText("Hilera a evaluar: " + hilera + "\n\n"
+                        + "\n" + retorno[1]);
+                JOptionPane.showMessageDialog(rootPane, "Hilera rechazada", "RECHAZA", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(rootPane, "Error en: " + e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+        }    
+    }//GEN-LAST:event_btnVerificarActionPerformed
+
     
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

@@ -320,7 +320,12 @@ public class main extends javax.swing.JFrame {
 
     private void jButtonAutomataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAutomataActionPerformed
         
-        new AutomataView(gramatica).setVisible(true);
+        if(gramatica.esEspecial()){
+            new AutomataView(gramatica).setVisible(true);
+        }else{
+            JOptionPane.showMessageDialog(rootPane, "La gramática ingresada no es permitida");
+        }
+        
         
     }//GEN-LAST:event_jButtonAutomataActionPerformed
 
